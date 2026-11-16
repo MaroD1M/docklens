@@ -45,5 +45,5 @@
 - 仅 `v*` 标签触发镜像构建和 Release
 - 所有工作流不启用 Actions 缓存，关闭 provenance/SBOM
 - `scripts/release.sh` 发布脚本
-- Dependabot、Issue 模板、PR 模板
+- Issue 模板、PR 模板
 - 安全策略与贡献指南
