@@ -1,0 +1,46 @@
+services:
+  docklens:
+    image: ${DOCKLENS_IMAGE:-ghcr.io/marod1m/docklens}:${DOCKLENS_VERSION:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VERSION: ${DOCKLENS_VERSION:-dev}
+        COMMIT: ${DOCKLENS_COMMIT:-local}
+        BUILD_DATE: ${DOCKLENS_BUILD_DATE:-unknown}
+    container_name: docklens
+    restart: unless-stopped
+    init: true
+    network_mode: host
+    pid: host
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+      DOCKLENS_LISTEN: ${DOCKLENS_BIND:-0.0.0.0}:${DOCKLENS_PORT:-7577}
+      DOCKLENS_DATA_DIR: /data
+      DOCKER_HOST: unix:///var/run/docker.sock
+      DOCKLENS_REFRESH: ${DOCKLENS_REFRESH:-30}
+      DOCKLENS_HOST_IP: ${DOCKLENS_HOST_IP:-}
+      DOCKLENS_HOST_SCAN: "true"
+    volumes:
+      - ${DOCKLENS_DATA_DIR:-./data}:/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    cap_add:
+      - SYS_PTRACE
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 256m
+    stop_grace_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "/docklens", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

@@ -1,0 +1,49 @@
+{
+  "name": "docklens-web",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "typecheck": "tsc -b --noEmit",
+    "postbuild": "node -e \"require('fs').writeFileSync('dist/.gitkeep','')\""
+  },
+  "dependencies": {
+    "lucide-react": "^1.73.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router-dom": "^7.18.5"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.8"
+  },
+  "description": "DockLens web UI: deep-space holographic Docker IP and port dashboard",
+  "author": "MaroD1M",
+  "license": "MIT",
+  "homepage": "https://github.com/MaroD1M/docklens",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaroD1M/docklens.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MaroD1M/docklens/issues"
+  },
+  "keywords": [
+    "docker",
+    "port-manager",
+    "network-visualization",
+    "synology",
+    "nas",
+    "react",
+    "vite"
+  ],
+  "engines": {
+    "node": ">=24"
+  }
+}

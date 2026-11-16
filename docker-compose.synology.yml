@@ -1,0 +1,25 @@
+services:
+  docklens:
+    image: ghcr.io/marod1m/docklens:latest
+    container_name: docklens
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Shanghai
+      DOCKLENS_LISTEN: 0.0.0.0:7577
+      DOCKLENS_DATA_DIR: /data
+      DOCKER_HOST: unix:///var/run/docker.sock
+    volumes:
+      - ./data:/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "/docklens", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

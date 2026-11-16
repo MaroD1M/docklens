@@ -1,0 +1,668 @@
+.ports-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.ports-summary-card {
+  min-height: 102px;
+}
+
+.ports-summary-card .metric-value {
+  font-size: 28px;
+}
+
+.ports-summary-split {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.ports-summary-split span {
+  color: var(--text-muted);
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.ports-summary-split small {
+  margin-left: 2px;
+}
+
+.ports-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 358px;
+  gap: 16px;
+  align-items: start;
+}
+
+.ports-main,
+.ports-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.ports-matrix-card .section-header {
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.ports-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.ports-controls .segmented {
+  flex-wrap: wrap;
+}
+
+.ports-matrix-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ports-matrix-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ports-scale {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.ports-scale span {
+  color: var(--text-muted);
+  font-size: 10.5px;
+  margin-left: 6px;
+}
+
+.ports-legend {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  flex-wrap: wrap;
+}
+
+.ports-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.ports-swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  border: 1px solid var(--border-soft);
+  background: rgba(143, 166, 191, 0.08);
+}
+
+.ports-swatch.is-used {
+  border-color: rgba(56, 232, 255, 0.4);
+  background: rgba(56, 232, 255, 0.35);
+}
+
+.ports-swatch.is-conflict {
+  border-color: rgba(255, 92, 122, 0.5);
+  background: rgba(255, 92, 122, 0.55);
+}
+
+.ports-swatch.is-hidden {
+  border-color: rgba(143, 166, 191, 0.28);
+  border-style: dashed;
+  background: rgba(143, 166, 191, 0.12);
+}
+
+.ports-swatch.is-inferred {
+  border-color: rgba(255, 184, 77, 0.45);
+  border-style: dashed;
+  background: rgba(255, 184, 77, 0.25);
+}
+
+.ports-swatch.is-reserved {
+  border-color: rgba(167, 139, 250, 0.45);
+  background: rgba(167, 139, 250, 0.3);
+}
+
+.ports-swatch.is-free {
+  border-color: var(--border-soft);
+  background: rgba(143, 166, 191, 0.05);
+}
+
+.ports-matrix {
+  display: grid;
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.ports-cell {
+  appearance: none;
+  position: relative;
+  height: 26px;
+  min-width: 0;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: rgba(143, 166, 191, 0.045);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease, box-shadow 0.14s ease;
+}
+
+.ports-cell span {
+  pointer-events: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.ports-cell:hover,
+.ports-cell:focus-visible {
+  border-color: var(--border-active);
+  color: var(--text-primary);
+  background: rgba(56, 232, 255, 0.1);
+  box-shadow: 0 0 10px rgba(56, 232, 255, 0.14);
+  outline: none;
+  z-index: 1;
+}
+
+.ports-cell.is-used {
+  border-color: rgba(56, 232, 255, 0.3);
+  background: rgba(56, 232, 255, 0.14);
+  color: #b8f6ff;
+}
+
+.ports-cell.is-conflict {
+  border-color: rgba(255, 92, 122, 0.55);
+  background: rgba(255, 92, 122, 0.2);
+  color: #ffc2ce;
+  box-shadow: inset 0 0 10px rgba(255, 92, 122, 0.14);
+}
+
+.ports-cell.is-hidden {
+  border-color: rgba(143, 166, 191, 0.3);
+  border-style: dashed;
+  background: rgba(143, 166, 191, 0.09);
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
+.ports-cell.is-inferred {
+  border-color: rgba(255, 184, 77, 0.4);
+  border-style: dashed;
+  background: rgba(255, 184, 77, 0.13);
+  color: #ffdda6;
+}
+
+.ports-cell.is-reserved {
+  border-color: rgba(167, 139, 250, 0.4);
+  background: rgba(167, 139, 250, 0.14);
+  color: #d7c9ff;
+}
+
+.ports-cell.is-free {
+  color: rgba(143, 166, 191, 0.55);
+}
+
+.ports-cell.is-selected {
+  outline: 1px solid var(--hologram);
+  outline-offset: 1px;
+  z-index: 2;
+}
+
+.ports-info {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-holo);
+  background: linear-gradient(110deg, rgba(56, 232, 255, 0.06), transparent 70%);
+  min-height: 112px;
+  justify-content: center;
+}
+
+.ports-info.is-empty {
+  border-style: dashed;
+  border-color: var(--border-soft);
+  background: rgba(143, 166, 191, 0.03);
+  color: var(--text-muted);
+  font-size: 11.5px;
+  text-align: center;
+}
+
+.ports-info-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ports-info-port {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.ports-info-port span {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 400;
+  margin-left: 2px;
+}
+
+.ports-info-service {
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  word-break: break-word;
+}
+
+.ports-info-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.ports-info-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ports-gaps-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.ports-gaps-count {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  border: 1px solid var(--border-soft);
+  border-radius: 5px;
+  padding: 2px 7px;
+  white-space: nowrap;
+}
+
+.ports-gaps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(196px, 1fr));
+  gap: 8px;
+}
+
+.ports-gap-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 11px;
+  border-radius: 9px;
+  border: 1px solid var(--border-soft);
+  background: rgba(143, 166, 191, 0.035);
+  transition: border-color 0.16s ease, background 0.16s ease;
+}
+
+.ports-gap-card:hover {
+  border-color: var(--border-holo);
+  background: rgba(56, 232, 255, 0.045);
+}
+
+.ports-gap-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ports-gap-range {
+  font-size: 12.5px;
+  color: var(--text-primary);
+}
+
+.ports-gap-size {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.ports-gaps-empty {
+  margin: 0;
+  padding: 14px;
+  border: 1px dashed var(--border-soft);
+  border-radius: 9px;
+  color: var(--text-muted);
+  font-size: 11.5px;
+}
+
+.ports-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.ports-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ports-form-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ports-form-row-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ports-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.ports-field > span,
+.ports-field-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.ports-field .input {
+  width: 100%;
+  min-width: 0;
+}
+
+.ports-field-label {
+  padding-bottom: 10px;
+}
+
+.ports-field-grow {
+  flex: 1 1 150px;
+}
+
+.ports-field-port {
+  flex: 0 0 96px;
+}
+
+.ports-form-submit {
+  margin-left: auto;
+}
+
+.ports-error {
+  margin: 0;
+  font-size: 11px;
+  color: var(--coral);
+}
+
+.ports-notice {
+  margin: 0;
+  font-size: 11px;
+  color: var(--amber);
+}
+
+.ports-finder-results {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-soft);
+  min-height: 58px;
+}
+
+.ports-finder-results-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.ports-finder-results-head em {
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--text-muted);
+  margin-left: 6px;
+}
+
+.ports-chips {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.ports-port-chip {
+  min-width: 40px;
+  justify-content: center;
+  font-size: 10px;
+}
+
+.ports-finder-empty {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.ports-check {
+  position: relative;
+  overflow: hidden;
+  padding-top: 1px;
+}
+
+.ports-scanbar {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--hologram), transparent);
+  animation: ports-scan 0.6s linear infinite;
+}
+
+@keyframes ports-scan {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+.ports-check.is-scanning .ports-form {
+  opacity: 0.72;
+}
+
+.ports-check-result {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-soft);
+  min-height: 64px;
+}
+
+.ports-check-empty,
+.ports-check-scanning {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.ports-check-scanning {
+  color: var(--hologram);
+  font-family: var(--font-mono);
+}
+
+.ports-result {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 11px;
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  background: rgba(143, 166, 191, 0.035);
+}
+
+.ports-result.is-occupied {
+  border-color: rgba(255, 92, 122, 0.32);
+  background: linear-gradient(110deg, rgba(255, 92, 122, 0.09), transparent 70%);
+}
+
+.ports-result.is-free {
+  border-color: rgba(59, 240, 176, 0.28);
+  background: linear-gradient(110deg, rgba(59, 240, 176, 0.07), transparent 70%);
+}
+
+.ports-result-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12.5px;
+}
+
+.ports-result-proto {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--text-muted);
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
+  padding: 0 4px;
+}
+
+.ports-result-service {
+  font-size: 13px;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.ports-result-service em {
+  font-style: normal;
+  display: block;
+  margin-top: 2px;
+  font-size: 10.5px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.ports-result-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.ports-result-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ports-result-free-text {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+@media (max-width: 1200px) {
+  .ports-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ports-side {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+
+@media (max-width: 960px) {
+  .ports-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .ports-side {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ports-matrix {
+    gap: 3px;
+  }
+
+  .ports-cell {
+    height: 23px;
+    font-size: 8px;
+  }
+
+  .ports-controls {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 540px) {
+  .ports-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ports-form-row-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ports-field-port {
+    flex-basis: 80px;
+  }
+
+  .ports-legend {
+    gap: 8px;
+  }
+
+  .ports-cell span {
+    display: none;
+  }
+
+  .ports-cell.is-used span,
+  .ports-cell.is-conflict span,
+  .ports-cell.is-hidden span,
+  .ports-cell.is-inferred span,
+  .ports-cell.is-reserved span {
+    display: block;
+    font-size: 7px;
+  }
+}

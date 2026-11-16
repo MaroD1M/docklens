@@ -1,0 +1,15 @@
+.git
+.gitignore
+bin
+data
+docs
+web/node_modules
+web/dist
+web/.vite
+*.log
+.env
+.env.*
+.github
+*.md
+LICENSE
+VERSION
