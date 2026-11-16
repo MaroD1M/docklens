@@ -13,3 +13,4 @@ web/.vite
 *.md
 LICENSE
 VERSION
+/docklens-notes
