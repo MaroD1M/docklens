@@ -94,10 +94,6 @@ docker compose -f docker-compose.pull.yml up -d
 
 完整变量和部署说明见 [部署文档](docs/DEPLOY.md)。
 
-## 版本与发布
-
-当前版本见根目录 `VERSION`。普通 `push` 不会构建镜像，只有推送 `v*` 标签才会触发 GitHub Actions 构建多架构镜像、推送到 GHCR 并创建 Release。发布流程见 [GitHub 发布清单](docs/PUBLISHING.md)。
-
 ## 安全说明
 
 - 面板只调用 Docker 只读接口，不提供启停、删除或 Compose 编辑
@@ -113,8 +109,6 @@ Docker socket 等价于宿主机高权限，请只运行可信版本的镜像。
 
 - [部署文档](docs/DEPLOY.md)
 - [API 文档](docs/API.md)
-- [设计文档](docs/DESIGN.md)
-- [GitHub 发布清单](docs/PUBLISHING.md)
 - [安全策略](SECURITY.md)
 - [贡献指南](CONTRIBUTING.md)
 - [更新日志](CHANGELOG.md)
@@ -130,4 +124,8 @@ MaroD1M
 
 ## License
 
-[MIT](LICENSE) © MaroD1M
+GNU Affero General Public License v3.0 or later.
+
+Copyright © 2026 MaroD1M. See [LICENSE](LICENSE) and [NOTICE](NOTICE).
+
+基于本项目修改后通过网络提供服务时，也需要按 AGPL-3.0 开放对应源代码。

@@ -20,12 +20,12 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.3.0",
-    "typescript": "^5.9.3",
+    "typescript": "^7.0.2",
     "vite": "^8.3.8"
   },
-  "description": "DockLens web UI: deep-space holographic Docker IP and port dashboard",
+  "description": "DockLens web UI: Docker container IP and port dashboard",
   "author": "MaroD1M",
-  "license": "MIT",
+  "license": "AGPL-3.0-or-later",
   "homepage": "https://github.com/MaroD1M/docklens",
   "repository": {
     "type": "git",

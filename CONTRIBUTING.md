@@ -55,29 +55,6 @@ make test
 - 修复问题请关联 Issue
 - 新功能请先通过 Issue 讨论范围
 
-## 发布流程
+## 许可
 
-版本号统一在根目录 `VERSION` 文件。
-
-```bash
-# 1. 修改 VERSION
-echo 0.0.1 > VERSION
-
-# 2. 更新 CHANGELOG.md
-
-# 3. 同步版本、提交、打标签
-./scripts/release.sh
-
-# 4. 推送
-git push origin HEAD
-git push origin v0.0.1
-```
-
-普通 push 不触发镜像构建。只有 `v*` 标签会触发 GitHub Actions 构建多架构镜像并创建 Release：
-
-```text
-ghcr.io/marod1m/docklens:v0.0.1
-ghcr.io/marod1m/docklens:0.0.1
-ghcr.io/marod1m/docklens:0.0
-ghcr.io/marod1m/docklens:latest
-```
+提交代码即表示同意以 AGPL-3.0-or-later 授权。

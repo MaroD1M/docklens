@@ -35,15 +35,9 @@
 - 一键安装脚本
 - 群晖 Container Manager 部署说明
 
-### 项目与发布
+### 项目
 
-- README、部署、API、设计、发布清单文档
-- MIT License
-- GitHub Actions CI
-- GHCR 多架构镜像构建
-- 根目录 `VERSION` 全局版本号
-- 仅 `v*` 标签触发镜像构建和 Release
-- 所有工作流不启用 Actions 缓存，关闭 provenance/SBOM
-- `scripts/release.sh` 发布脚本
+- README、部署、API 文档
+- AGPL-3.0-or-later
 - Issue 模板、PR 模板
 - 安全策略与贡献指南

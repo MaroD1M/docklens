@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import {
   Download,
+  ExternalLink,
   FolderOpen,
   Moon,
   Save,
@@ -379,6 +380,14 @@ export function SettingsPage() {
           <div className="settings-about-foot">
             <ShieldCheck size={14} />
             <span>无外部数据库、遥测或外部请求</span>
+            <a
+              className="settings-about-source"
+              href="https://github.com/MaroD1M/docklens"
+              target="_blank"
+              rel="noreferrer"
+            >
+              源代码 <ExternalLink size={11} />
+            </a>
           </div>
         </HoloCard>
       </div>
