@@ -1,8 +1,8 @@
 .git
 .gitignore
-bin
-data
-docs
+/bin
+/data
+/docs
 web/node_modules
 web/dist
 web/.vite
