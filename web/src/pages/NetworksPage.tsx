@@ -108,10 +108,9 @@ export function NetworksPage() {
 
         <aside className="net-detail-rail" aria-label="网络详情" ref={detailRailRef}>
           <NetworkDetail network={selected} />
+          <SubnetOverlap networks={networks} selected={selected} />
         </aside>
       </div>
-
-      <SubnetOverlap networks={networks} />
     </div>
   );
 }

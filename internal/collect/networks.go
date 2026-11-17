@@ -260,6 +260,9 @@ func portConflicts(endpoints []model.Endpoint) []model.Warning {
 		if endpoint.Scope != model.ScopeHost && endpoint.Scope != model.ScopeLAN && endpoint.Scope != model.ScopeHostNet && endpoint.Scope != model.ScopeLoopback {
 			continue
 		}
+		if endpoint.Source == model.SourceInferred || endpoint.Source == model.SourceProxyLabel {
+			continue
+		}
 		key := fmt.Sprintf("%d/%s", endpoint.Port, endpoint.Protocol)
 		groups[key] = append(groups[key], endpoint)
 	}

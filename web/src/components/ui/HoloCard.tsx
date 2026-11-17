@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { KeyboardEvent, ReactNode } from "react";
 import { classNames } from "../../lib/format";
 
 interface HoloCardProps {
@@ -7,6 +7,12 @@ interface HoloCardProps {
   glow?: "none" | "cyan" | "amber" | "danger" | "green";
   interactive?: boolean;
   as?: "div" | "section" | "article";
+  onClick?: () => void;
+  onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
+  role?: string;
+  tabIndex?: number;
+  ariaPressed?: boolean;
+  ariaLabel?: string;
 }
 
 export function HoloCard({
@@ -15,6 +21,12 @@ export function HoloCard({
   glow = "none",
   interactive = false,
   as: Tag = "div",
+  onClick,
+  onKeyDown,
+  role,
+  tabIndex,
+  ariaPressed,
+  ariaLabel,
 }: HoloCardProps) {
   return (
     <Tag
@@ -24,6 +36,12 @@ export function HoloCard({
         interactive && "holo-card-interactive",
         className,
       )}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      role={role}
+      tabIndex={tabIndex}
+      aria-pressed={ariaPressed}
+      aria-label={ariaLabel}
     >
       <span className="holo-corner holo-corner-tl" />
       <span className="holo-corner holo-corner-tr" />

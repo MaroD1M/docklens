@@ -85,6 +85,8 @@ export function PortCheckPanel({ endpoints }: PortCheckPanelProps) {
       const portMatches = endpoints.filter(
         (endpoint) =>
           isActiveHostPortEndpoint(endpoint) &&
+          endpoint.source !== "INFERRED" &&
+          endpoint.source !== "PROXY_LABEL" &&
           endpoint.protocol === protocol &&
           endpoint.port === portNumber,
       );

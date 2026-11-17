@@ -864,3 +864,45 @@
     width: 42%;
   }
 }
+
+.ep-page .ep-table {
+  font-size: 13.5px;
+}
+
+.ep-page .ep-table th {
+  font-size: 12px;
+}
+
+.ep-page .ep-table td {
+  font-size: 13.5px;
+}
+
+.ep-page .ep-table .service-copy strong {
+  font-size: 14px;
+}
+
+.ep-page .ep-table .service-copy span,
+.ep-page .ep-table .ep-net-sub,
+.ep-page .ep-table .ep-scope-hint,
+.ep-page .ep-table .ip-secondary {
+  font-size: 12px;
+}
+
+.ep-page .ep-table .ip-primary {
+  font-size: 13px;
+}
+
+.ep-page .ep-table .port-map {
+  font-size: 13px;
+}
+
+.ep-page .ep-table .badge,
+.ep-page .ep-table .ep-status,
+.ep-page .ep-table .copy-btn-chip {
+  font-size: 12px;
+}
+
+.ep-page .chip,
+.ep-page .segmented button {
+  font-size: 12.5px;
+}

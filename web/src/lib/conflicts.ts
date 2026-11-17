@@ -78,6 +78,7 @@ export function findPortConflicts(endpoints: Endpoint[]): PortConflict[] {
 
   for (const endpoint of endpoints) {
     if (!isActiveHostPortEndpoint(endpoint)) continue;
+    if (endpoint.source === "INFERRED" || endpoint.source === "PROXY_LABEL") continue;
     if (endpoint.protocol !== "tcp" && endpoint.protocol !== "udp") continue;
     const key = `${endpoint.port}/${endpoint.protocol}`;
     const group = groups.get(key);

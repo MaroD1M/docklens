@@ -786,3 +786,12 @@
   color: var(--text-secondary);
   font-size: 12px;
 }
+
+.net-card {
+  cursor: pointer;
+}
+
+.net-card:focus-visible {
+  outline: 2px solid var(--border-active);
+  outline-offset: 2px;
+}

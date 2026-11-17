@@ -7,16 +7,21 @@ import { findOverlaps, relationLabel } from "./networkUtils";
 
 interface SubnetOverlapProps {
   networks: NetworkInfo[];
+  selected?: NetworkInfo;
 }
 
-export function SubnetOverlap({ networks }: SubnetOverlapProps) {
-  const pairs = findOverlaps(networks);
+export function SubnetOverlap({ networks, selected }: SubnetOverlapProps) {
+  const pairs = findOverlaps(networks).filter(
+    (pair) =>
+      !selected || pair.a.id === selected.id || pair.b.id === selected.id,
+  );
 
   return (
     <HoloCard className="net-overlap" as="section">
       <SectionHeader
         eyebrow="子网重叠"
         title="CIDR 关系"
+        subtitle={selected ? `与 ${selected.name} 相关` : undefined}
         action={<span className="net-overlap-count">{pairs.length} 组</span>}
       />
 

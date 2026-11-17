@@ -41,3 +41,16 @@ func TestPortConflictsIgnoreInternalAndStopped(t *testing.T) {
 		t.Fatalf("expected one conflict warning, got %+v", warnings)
 	}
 }
+
+func TestPortConflictsIgnoreInferred(t *testing.T) {
+	endpoints := []model.Endpoint{
+		{Service: "qbittorrent", Container: "qbittorrent", Scope: model.ScopeHostNet, Source: model.SourceInferred, Status: model.StatusRunning, IP: "192.168.1.20", Port: 6881, Protocol: model.ProtocolTCP},
+		{Service: "qbittorrent-seed", Container: "qbittorrent-seed", Scope: model.ScopeHostNet, Source: model.SourceInferred, Status: model.StatusRunning, IP: "192.168.1.20", Port: 6881, Protocol: model.ProtocolTCP},
+		{Service: "qbittorrent", Container: "qbittorrent", Scope: model.ScopeHost, Source: model.SourcePublished, Status: model.StatusRunning, IP: "0.0.0.0", Port: 8080, Protocol: model.ProtocolTCP, AccessIPs: []model.AccessIP{{IP: "192.168.1.20"}}},
+		{Service: "nginx", Container: "nginx", Scope: model.ScopeHost, Source: model.SourceHostListener, Status: model.StatusRunning, IP: "0.0.0.0", Port: 8080, Protocol: model.ProtocolTCP, AccessIPs: []model.AccessIP{{IP: "192.168.1.20"}}},
+	}
+	warnings := portConflicts(endpoints)
+	if len(warnings) != 1 {
+		t.Fatalf("expected only the published/host-listener conflict, got %+v", warnings)
+	}
+}

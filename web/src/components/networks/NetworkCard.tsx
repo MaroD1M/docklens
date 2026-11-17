@@ -35,6 +35,17 @@ export function NetworkCard({ network, selected, onSelect }: NetworkCardProps) {
       glow={selected ? "cyan" : network.warning ? "danger" : "none"}
       interactive
       as="article"
+      onClick={onSelect}
+      role="button"
+      tabIndex={0}
+      ariaPressed={selected}
+      ariaLabel={`${network.name}，${selected ? "当前网络" : "点击选择"}`}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onSelect();
+        }
+      }}
     >
       <div className="net-card-head">
         <div className="net-card-name">
@@ -47,6 +58,7 @@ export function NetworkCard({ network, selected, onSelect }: NetworkCardProps) {
       </div>
 
       <div className="net-card-flags">
+        {selected && <Badge tone="cyan" dot>当前</Badge>}
         {network.internal && <Badge tone="amber">内部网络</Badge>}
         {network.warning && <Badge tone="red">子网重叠</Badge>}
         {network.ipv6 && <Badge tone="blue">IPv6</Badge>}
@@ -94,16 +106,6 @@ export function NetworkCard({ network, selected, onSelect }: NetworkCardProps) {
         </div>
         <ProgressBar value={network.utilization} tone={tone} />
       </div>
-
-      <button
-        type="button"
-        className={`net-card-select ${selected ? "is-active" : ""}`}
-        aria-pressed={selected}
-        aria-label={selected ? `${network.name} 已选中` : `查看 ${network.name} 的 IP`}
-        onClick={onSelect}
-      >
-        {selected ? "已选中" : "查看 IP"}
-      </button>
     </HoloCard>
   );
 }

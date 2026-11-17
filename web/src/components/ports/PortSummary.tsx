@@ -53,7 +53,7 @@ export function PortSummary({
   return (
     <div className="ports-summary" aria-label="端口概况">
       <HoloCard className="ports-summary-card" glow="cyan">
-        <div className="metric-label">已用</div>
+        <div className="metric-label">已知端口</div>
         <div className="metric-value">
           {data.usedTotal}
           <small>个</small>
