@@ -84,10 +84,16 @@ export function usableHosts(cidr: string, limit = 254): string[] {
   return hosts;
 }
 
+function isPseudoNetwork(network: NetworkInfo): boolean {
+  return network.name === "host" || network.driver === "host";
+}
+
 export function findOverlaps(networks: NetworkInfo[]): OverlapPair[] {
   const pairs: OverlapPair[] = [];
   for (let i = 0; i < networks.length; i += 1) {
+    if (isPseudoNetwork(networks[i])) continue;
     for (let j = i + 1; j < networks.length; j += 1) {
+      if (isPseudoNetwork(networks[j])) continue;
       const relation = compareCidrs(networks[i].subnet, networks[j].subnet);
       if (relation) pairs.push({ a: networks[i], b: networks[j], relation });
     }
@@ -102,6 +108,7 @@ export function overlappingNetworks(
   const result: { network: NetworkInfo; relation: CidrRelation }[] = [];
   for (const network of networks) {
     if (network.id === target.id) continue;
+    if (isPseudoNetwork(network) || isPseudoNetwork(target)) continue;
     const relation = compareCidrs(target.subnet, network.subnet);
     if (relation) result.push({ network, relation });
   }

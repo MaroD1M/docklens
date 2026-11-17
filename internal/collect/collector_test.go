@@ -147,3 +147,15 @@ func TestScanBuildsEndpoints(t *testing.T) {
 		t.Fatal("expected ip pools")
 	}
 }
+
+func TestInferHostNetworkPortsKeepsProtocols(t *testing.T) {
+	inspect := docker.ContainerInspect{}
+	inspect.Config.ExposedPorts = map[string]map[string]any{
+		"53/tcp": {},
+		"53/udp": {},
+	}
+	ports := inferHostNetworkPorts(inspect)
+	if len(ports) != 2 {
+		t.Fatalf("expected tcp and udp port 53, got %+v", ports)
+	}
+}

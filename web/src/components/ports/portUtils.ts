@@ -1,5 +1,5 @@
 import type { Endpoint, PortCell } from "../../types";
-import { findPortConflicts } from "../../lib/conflicts";
+import { findPortConflicts, isActiveHostPortEndpoint } from "../../lib/conflicts";
 
 export type PortProtocol = "tcp" | "udp";
 
@@ -72,6 +72,7 @@ function keyFor(protocol: string, port: number): string {
 export function groupEndpoints(endpoints: Endpoint[]): Map<string, Endpoint[]> {
   const grouped = new Map<string, Endpoint[]>();
   for (const endpoint of endpoints) {
+    if (!isActiveHostPortEndpoint(endpoint)) continue;
     const key = keyFor(endpoint.protocol, endpoint.port);
     const list = grouped.get(key);
     if (list) {
@@ -101,7 +102,7 @@ export function usedPortsFor(
 ): Set<number> {
   const used = new Set<number>();
   for (const endpoint of endpoints) {
-    if (endpoint.protocol === protocol) used.add(endpoint.port);
+    if (isActiveHostPortEndpoint(endpoint) && endpoint.protocol === protocol) used.add(endpoint.port);
   }
   const cells = protocol === "tcp" ? portCells : udpPorts;
   for (const cell of cells) {

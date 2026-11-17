@@ -102,6 +102,5 @@ jobs:
             使用：
 
             ```bash
-            docker compose -f docker-compose.pull.yml pull
-            docker compose -f docker-compose.pull.yml up -d
+            docker pull ${{ env.IMAGE }}:${{ github.ref_name }}
             ```

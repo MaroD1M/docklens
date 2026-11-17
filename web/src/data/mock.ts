@@ -16,7 +16,7 @@ export let overviewStats: OverviewStats = {
   containers: 16,
   endpoints: 22,
   networks: 6,
-  conflicts: 2,
+  conflicts: 1,
   newToday: 3,
   ipChanges: 1,
 };
@@ -944,7 +944,12 @@ function buildPortCells(items: Endpoint[]): PortCell[] {
 
 function buildUdpPorts(items: Endpoint[]): PortCell[] {
   return items
-    .filter((endpoint) => endpoint.protocol === "udp")
+    .filter(
+      (endpoint) =>
+        endpoint.protocol === "udp" &&
+        endpoint.status === "running" &&
+        (endpoint.scope === "HOST" || endpoint.scope === "LAN" || endpoint.scope === "HOST_NET" || endpoint.scope === "LOOPBACK"),
+    )
     .map((endpoint) => ({
       port: endpoint.port,
       protocol: "udp" as const,

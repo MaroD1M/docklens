@@ -1,9 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Badge } from "../components/ui/Badge";
 import { HoloCard } from "../components/ui/HoloCard";
 import { TopologyGraph, type TopologyLayout } from "../components/topology/TopologyGraph";
 import { endpoints, networks } from "../data/mock";
 import { useDataVersion } from "../data/DataProvider";
+
+const topologyScopes = new Set(["HOST", "LAN", "HOST_NET"]);
 
 export function TopologyPage() {
   const dataVersion = useDataVersion();
@@ -12,14 +14,47 @@ export function TopologyPage() {
   const [networkFilter, setNetworkFilter] = useState("all");
   const [onlyPublished, setOnlyPublished] = useState(false);
 
+  useEffect(() => {
+    if (networkFilter === "all") return;
+    const exists = networks.some(
+      (network) => network.id === networkFilter || network.name === networkFilter,
+    );
+    if (!exists) setNetworkFilter("all");
+  }, [dataVersion, networkFilter]);
+
+  const baseEndpoints = useMemo(
+    () =>
+      endpoints.filter((endpoint) => {
+        if (!topologyScopes.has(endpoint.scope)) return false;
+        if (onlyPublished && endpoint.source !== "PUBLISHED") return false;
+        return true;
+      }),
+    [dataVersion, onlyPublished],
+  );
+
+  const visibleEndpoints = useMemo(
+    () =>
+      networkFilter === "all"
+        ? baseEndpoints
+        : baseEndpoints.filter(
+            (endpoint) =>
+              endpoint.networkId === networkFilter || endpoint.network === networkFilter,
+          ),
+    [baseEndpoints, networkFilter],
+  );
+
   const networkCounts = useMemo(() => {
     const counts = new Map<string, number>();
-    endpoints.forEach((endpoint) => {
+    baseEndpoints.forEach((endpoint) => {
       const key = endpoint.networkId ?? endpoint.network;
       counts.set(key, (counts.get(key) ?? 0) + 1);
     });
     return counts;
-  }, [dataVersion]);
+  }, [baseEndpoints]);
+
+  const visibleNetworks = networkFilter === "all" ? networks : networks.filter(
+    (network) => network.id === networkFilter || network.name === networkFilter,
+  );
 
   return (
     <div className="page">
@@ -30,14 +65,7 @@ export function TopologyPage() {
         </div>
         <div className="page-actions">
           <Badge tone="cyan" dot>
-            {networkFilter === "all" ? networks.length : 1} 网络 ·{" "}
-            {networkFilter === "all"
-              ? endpoints.length
-              : endpoints.filter(
-                  (endpoint) =>
-                    endpoint.networkId === networkFilter || endpoint.network === networkFilter,
-                ).length}{" "}
-            端点
+            {visibleNetworks.length} 网络 · {visibleEndpoints.length} 端点
           </Badge>
           <div className="segmented" role="group" aria-label="拓扑布局">
             <button
@@ -70,7 +98,7 @@ export function TopologyPage() {
               onClick={() => setNetworkFilter("all")}
             >
               全部网络
-              <span className="chip-count">{endpoints.length}</span>
+              <span className="chip-count">{baseEndpoints.length}</span>
             </button>
             {networks.map((network) => {
               const count =

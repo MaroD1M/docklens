@@ -4,13 +4,10 @@ import {
   ChevronRight,
   Command,
   Menu,
-  Moon,
   RefreshCw,
   Search,
-  Sun,
 } from "lucide-react";
 import { containers, endpoints } from "../../data/mock";
-import { applyTheme, getTheme } from "../../lib/theme";
 import { requestRefresh } from "../../lib/api";
 
 const pageNames: Record<string, string> = {
@@ -32,9 +29,8 @@ export function TopBar({ onMenu }: TopBarProps) {
   const location = useLocation();
   const pageName = pageNames[location.pathname] ?? "总览";
   const [query, setQuery] = useState("");
-  const [countdown, setCountdown] = useState(9);
+  const [countdown, setCountdown] = useState(30);
   const [scanning, setScanning] = useState(false);
-  const [dark, setDark] = useState(() => getTheme() === "dark");
   const [source, setSource] = useState<"live" | "mock">("mock");
   const timer = useRef<number | undefined>(undefined);
   const searchRef = useRef<HTMLInputElement | null>(null);
@@ -53,25 +49,13 @@ export function TopBar({ onMenu }: TopBarProps) {
   }, [countdown, source]);
 
   useEffect(() => {
-    const syncTheme = (event: Event) => {
-      const theme = (event as CustomEvent<string>).detail;
-      setDark(theme !== "light");
-    };
     const syncSource = (event: Event) => {
       const value = (event as CustomEvent<string>).detail;
       setSource(value === "live" ? "live" : "mock");
     };
-    window.addEventListener("docklens:theme", syncTheme);
     window.addEventListener("docklens:source", syncSource);
-    return () => {
-      window.removeEventListener("docklens:theme", syncTheme);
-      window.removeEventListener("docklens:source", syncSource);
-    };
+    return () => window.removeEventListener("docklens:source", syncSource);
   }, []);
-
-  useEffect(() => {
-    applyTheme(dark ? "dark" : "light");
-  }, [dark]);
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
@@ -145,14 +129,6 @@ export function TopBar({ onMenu }: TopBarProps) {
             <RefreshCw size={16} />
           </button>
         </div>
-        <button
-          type="button"
-          className="icon-btn"
-          aria-label={dark ? "切换浅色模式" : "切换深色模式"}
-          onClick={() => setDark((value) => !value)}
-        >
-          {dark ? <Sun size={16} /> : <Moon size={16} />}
-        </button>
       </div>
       <div className="scan-line" />
     </header>

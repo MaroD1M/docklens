@@ -26,6 +26,9 @@ const legendItems = [
   { tone: "lan", label: "局域网" },
   { tone: "container", label: "容器内" },
   { tone: "stale", label: "最后已知" },
+  { tone: "muted", label: "隐藏/回环" },
+  { tone: "overlay", label: "Overlay" },
+  { tone: "external", label: "外部" },
   { tone: "danger", label: "冲突端点" },
 ];
 
@@ -73,6 +76,8 @@ export function NetworkRadar({ endpoints }: NetworkRadarProps) {
             : scopeTone[endpoint.scope];
     counts.set(tone, (counts.get(tone) ?? 0) + 1);
   }
+
+  const visibleLegend = legendItems.filter((item) => (counts.get(item.tone) ?? 0) > 0);
 
   return (
     <HoloCard className="ov-radar-card">
@@ -180,7 +185,7 @@ export function NetworkRadar({ endpoints }: NetworkRadarProps) {
       </div>
 
       <div className="ov-radar-legend">
-        {legendItems.map((item) => (
+        {visibleLegend.map((item) => (
           <span key={item.tone} className="ov-legend-item">
             <span className={`ov-legend-dot ov-legend-dot--${item.tone}`} />
             {item.label}

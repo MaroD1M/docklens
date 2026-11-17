@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import type { Endpoint, PortCell } from "../../types";
 import { CopyButton } from "../ui/CopyButton";
 import { HoloCard } from "../ui/HoloCard";
@@ -35,9 +35,9 @@ function validate(startValue: string, endValue: string, countValue: string): Val
   if (start > end) {
     return { start, end, count, error: "起始不能大于结束。" };
   }
-  const available = end - start + 1;
-  if (count < 1 || count > available) {
-    return { start, end, count, error: `数量 1–${available}。` };
+  const maxCount = Math.min(end - start + 1, 64);
+  if (count < 1 || count > maxCount) {
+    return { start, end, count, error: `数量 1–${maxCount}。` };
   }
   return { start, end, count };
 }
@@ -50,6 +50,12 @@ export function FreePortFinder({ endpoints, portCells, udpPorts }: FreePortFinde
   const [results, setResults] = useState<number[]>([]);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+
+  useEffect(() => {
+    setResults([]);
+    setError("");
+    setNotice("");
+  }, [start, end, count, protocol]);
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
@@ -177,7 +183,7 @@ export function FreePortFinder({ endpoints, portCells, udpPorts }: FreePortFinde
             </div>
           </>
         ) : (
-          <p className="ports-finder-empty">点击端口复制。</p>
+          <p className="ports-finder-empty">输入范围后查找，结果会显示在这里。</p>
         )}
       </div>
     </HoloCard>

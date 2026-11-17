@@ -157,6 +157,10 @@ export function TopologyGraph({
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [zoom, setZoom] = useState(1);
 
+  useEffect(() => {
+    setZoom(1);
+  }, [layout, networkFilter, onlyPublished]);
+
   const graph = useMemo(() => {
     const config =
       layout === "compact"
@@ -208,8 +212,8 @@ export function TopologyGraph({
       const networkNode: GraphNode = {
         id: `net:${group.network.id}`,
         kind: "network",
-        label: group.network.name,
-        sublabel: `${group.network.driver} · ${group.network.subnet}`,
+        label: truncate(group.network.name, 18),
+        sublabel: truncate(`${group.network.driver} · ${group.network.subnet}`, 30),
         x: config.networkX,
         y: top + height / 2,
         network: group.network,
@@ -285,8 +289,8 @@ export function TopologyGraph({
     const hostNode: GraphNode = {
       id: "host:local",
       kind: "host",
-      label: hostInfo.name,
-      sublabel: `${hostInfo.ip || "本地"} · ${containersList.length} 容器`,
+      label: truncate(hostInfo.name, 18),
+      sublabel: truncate(`${hostInfo.ip || "本地"} · ${containersList.length} 容器`, 30),
       x: config.hostX,
       y: hostY,
     };
@@ -362,9 +366,7 @@ export function TopologyGraph({
     );
   }
 
-  const viewWidth = graph.width / zoom;
-  const viewHeight = graph.height / zoom;
-  const viewBox = `${(graph.width - viewWidth) / 2} ${(graph.height - viewHeight) / 2} ${viewWidth} ${viewHeight}`;
+  const viewBox = `0 0 ${graph.width} ${graph.height}`;
 
   const packetEdges = graph.edges.filter((_, index) => index % 2 === 0).slice(0, 22);
   const canZoomOut = zoom > 0.75;
@@ -406,6 +408,11 @@ export function TopologyGraph({
           key={`${layout}-${networkFilter}-${onlyPublished}`}
           className={`topo-graph ${animation ? "is-animated" : ""}`}
           viewBox={viewBox}
+          style={{
+            width: graph.width * zoom,
+            height: graph.height * zoom,
+            minWidth: 0,
+          }}
           role="group"
           aria-label="容器网络拓扑图，可点击节点查看详情"
         >
@@ -479,6 +486,7 @@ export function TopologyGraph({
                     }
                   }}
                 >
+                  <title>{`${kindLabels[node.kind]} ${node.label}${node.sublabel ? ` · ${node.sublabel}` : ""}`}</title>
                   <rect
                     className="topo-node-halo"
                     x={node.x - metrics.halfWidth - 5}

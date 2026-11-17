@@ -38,7 +38,7 @@ export function NetworkCard({ network, selected, onSelect }: NetworkCardProps) {
     >
       <div className="net-card-head">
         <div className="net-card-name">
-          <strong>{network.name}</strong>
+          <strong title={network.name}>{network.name}</strong>
           <span>{network.scope}</span>
         </div>
         <Badge tone={driverTone(network.driver)} dot>
@@ -99,6 +99,7 @@ export function NetworkCard({ network, selected, onSelect }: NetworkCardProps) {
         type="button"
         className={`net-card-select ${selected ? "is-active" : ""}`}
         aria-pressed={selected}
+        aria-label={selected ? `${network.name} 已选中` : `查看 ${network.name} 的 IP`}
         onClick={onSelect}
       >
         {selected ? "已选中" : "查看 IP"}

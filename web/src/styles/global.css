@@ -40,12 +40,12 @@
   --border-holo: rgba(15, 118, 150, 0.2);
   --border-soft: rgba(31, 65, 90, 0.12);
   --border-active: rgba(15, 118, 150, 0.55);
-  --hologram: #087f9e;
+  --hologram: #066f89;
   --hologram-dim: rgba(8, 127, 158, 0.12);
   --plasma: #315fd4;
-  --ion: #0d9b72;
-  --amber: #b86b00;
-  --coral: #d62f52;
+  --ion: #0b7f5f;
+  --amber: #8f5600;
+  --coral: #bf2142;
   --violet: #6d4bd8;
   --text-primary: #0c2233;
   --text-secondary: #385061;
@@ -1186,7 +1186,7 @@ a {
 }
 
 .data-table tbody tr.is-hidden-row {
-  opacity: 0.5;
+  opacity: 0.75;
 }
 
 .data-table tbody tr:last-child td {

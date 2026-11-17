@@ -173,7 +173,7 @@ func (s *Server) handleCheckPort(w http.ResponseWriter, r *http.Request) {
 		if endpoint.Port != port {
 			continue
 		}
-		if ip != "" && !netutil.IsWildcardIP(ip) && endpoint.IP != ip && !accessContains(endpoint.AccessIPs, ip) {
+		if !endpointMatchesIP(endpoint, ip) {
 			continue
 		}
 		matches = append(matches, endpoint)
@@ -303,6 +303,27 @@ func (s *Server) handlePutSettings(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, values)
+}
+
+func endpointMatchesIP(endpoint model.Endpoint, ip string) bool {
+	if ip == "" || netutil.IsWildcardIP(ip) {
+		return true
+	}
+	if endpoint.IP == ip {
+		return true
+	}
+	if endpoint.IP == "0.0.0.0" && !strings.Contains(ip, ":") {
+		return true
+	}
+	if endpoint.IP == "::" && strings.Contains(ip, ":") {
+		return true
+	}
+	for _, item := range endpoint.AccessIPs {
+		if item.IP == ip {
+			return true
+		}
+	}
+	return false
 }
 
 func isHostPortScope(scope model.Scope) bool {

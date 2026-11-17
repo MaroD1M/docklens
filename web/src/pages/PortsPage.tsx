@@ -69,15 +69,19 @@ export function PortsPage() {
     setFocusPort(null);
   };
 
-  const jumpToPort = (port: number) => {
+  const jumpToPort = (port: number, nextProtocol: PortProtocol) => {
     const next = windowForPort(port);
     setWindowStart(next.start);
     setStartInput(String(next.start));
     setFocusPort(port);
+    setProtocol(nextProtocol);
   };
 
   const conflictsInRange = conflicts.filter(
-    (conflict) => conflict.port >= range.start && conflict.port <= range.end,
+    (conflict) =>
+      conflict.port >= range.start &&
+      conflict.port <= range.end &&
+      conflict.protocol === protocol,
   );
   const canPrev = range.start > MIN_PORT;
   const canNext = range.end < MAX_PORT;

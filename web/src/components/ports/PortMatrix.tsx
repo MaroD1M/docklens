@@ -19,6 +19,7 @@ interface PortMatrixProps {
   start: number;
   end: number;
   focusPort?: number | null;
+  onManualSelect?: () => void;
 }
 
 const stateTone: Record<PortState, "cyan" | "red" | "muted" | "amber" | "green" | "violet"> = {
@@ -40,6 +41,7 @@ export function PortMatrix({
   start,
   end,
   focusPort,
+  onManualSelect,
 }: PortMatrixProps) {
   const navigate = useNavigate();
   const [hovered, setHovered] = useState<PortSlot | null>(null);
@@ -61,8 +63,9 @@ export function PortMatrix({
 
   const handleClick = (slot: PortSlot) => {
     setSelected(slot);
+    onManualSelect?.();
     if (slot.state !== "free") {
-      navigate(`/endpoints?q=:${slot.port}`);
+      navigate(`/endpoints?q=${encodeURIComponent(`:${slot.port} proto:${slot.protocol}`)}`);
     }
   };
 

@@ -5,7 +5,7 @@ import { HoloCard } from "../ui/HoloCard";
 
 interface PortConflictsProps {
   conflicts: PortConflict[];
-  onJump: (port: number) => void;
+  onJump: (port: number, protocol: "tcp" | "udp") => void;
 }
 
 export function PortConflicts({ conflicts, onJump }: PortConflictsProps) {
@@ -45,7 +45,12 @@ export function PortConflicts({ conflicts, onJump }: PortConflictsProps) {
                 <button
                   type="button"
                   className="btn btn-sm"
-                  onClick={() => onJump(conflict.port)}
+                  onClick={() =>
+                    onJump(
+                      conflict.port,
+                      conflict.protocol === "udp" ? "udp" : "tcp",
+                    )
+                  }
                   title={`在矩阵中定位 ${conflict.port}/${conflict.protocol}`}
                 >
                   定位矩阵
@@ -53,7 +58,11 @@ export function PortConflicts({ conflicts, onJump }: PortConflictsProps) {
                 <button
                   type="button"
                   className="btn btn-sm btn-danger"
-                  onClick={() => navigate(`/endpoints?q=:${conflict.port}`)}
+                  onClick={() =>
+                    navigate(
+                      `/endpoints?q=${encodeURIComponent(`:${conflict.port} proto:${conflict.protocol} hidden:true`)}`,
+                    )
+                  }
                   title={`查看 ${conflict.port}/${conflict.protocol} 的端点`}
                 >
                   查看端点

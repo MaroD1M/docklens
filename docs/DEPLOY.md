@@ -12,7 +12,7 @@ DockLens 是单镜像、单容器应用，只需要 Docker 和 Docker socket，�
 
 ## 群晖 Synology
 
-推荐使用 Container Manager 项目，粘贴仓库中的 `docker-compose.synology.yml`。该文件不包含 `build`，使用 host 网络以正确识别 NAS 的局域网 IP。需要固定版本时把 `latest` 改成具体 tag。
+推荐使用 Container Manager 项目，粘贴仓库中的 `docker-compose.synology.yml`。该文件不包含 `build`，使用 host 网络以正确识别 NAS 的局域网 IP。需要固定版本时设置 `DOCKLENS_VERSION` 或修改镜像 tag。
 
 1. 在 `/volume1/docker/docklens` 创建项目目录，可通过 File Station 或 SSH。
 2. 打开 Container Manager → 项目 → 新增。
@@ -118,7 +118,7 @@ docker compose -f docker-compose.pull.yml pull
 docker compose -f docker-compose.pull.yml up -d
 ```
 
-预构建镜像的版本由 `.env` 中的 `DOCKLENS_VERSION` 决定。群晖使用 `docker-compose.synology.yml` 时，`latest` 通过 `docker compose pull` 更新；固定 tag 时修改 image 标签。升级前建议备份 `./data`。
+预构建镜像的版本由 `.env` 中的 `DOCKLENS_VERSION` 决定。群晖使用 `docker-compose.synology.yml` 时，`latest` 通过 `docker compose pull` 更新；固定版本时设置 `DOCKLENS_VERSION` 或修改 image 标签。升级前建议备份 `./data`。
 
 ## 故障排查
 

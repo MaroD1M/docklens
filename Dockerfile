@@ -46,6 +46,8 @@ ENV DOCKLENS_LISTEN=0.0.0.0:7577 \
     DOCKER_HOST=unix:///var/run/docker.sock \
     DOCKLENS_REFRESH=30
 
+COPY LICENSE NOTICE /licenses/
+
 EXPOSE 7577
 VOLUME ["/data"]
 

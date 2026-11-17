@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import type { Endpoint, PortCell } from "../../types";
 import type { PortConflict } from "../../lib/conflicts";
 import { formatPercent } from "../../lib/format";
+import { isActiveHostPortEndpoint } from "../../lib/conflicts";
 import { HoloCard } from "../ui/HoloCard";
 import {
   usedPortsFor,

@@ -61,15 +61,16 @@ func buildEndpoints(inspect docker.ContainerInspect, state *scanState) []model.E
 	}
 
 	endpoints := make([]model.Endpoint, 0, len(inspect.NetworkSettings.Ports)+len(inspect.Config.ExposedPorts))
-	publishedContainerPorts := make(map[int]bool)
-	publishedHostPorts := make(map[int]bool)
+	publishedContainerPorts := make(map[string]bool)
+	publishedHostPorts := make(map[string]bool)
 
 	for spec, bindings := range inspect.NetworkSettings.Ports {
 		containerPort, protocol, ok := netutil.ParsePortSpec(spec)
 		if !ok {
 			continue
 		}
-		publishedContainerPorts[containerPort] = true
+		portKey := fmt.Sprintf("%d/%s", containerPort, protocol)
+		publishedContainerPorts[portKey] = true
 		for _, binding := range bindings {
 			hostPort, ok := netutil.PortFromString(binding.HostPort)
 			if !ok {
@@ -127,18 +128,19 @@ func buildEndpoints(inspect docker.ContainerInspect, state *scanState) []model.E
 			}
 			endpoint.ID = makeEndpointID(endpoint)
 			endpoints = append(endpoints, endpoint)
-			publishedHostPorts[hostPort] = true
+			publishedHostPorts[fmt.Sprintf("%d/%s", hostPort, protocol)] = true
 		}
 	}
 
 	hostNetwork := inspect.HostConfig.NetworkMode == "host"
 	if hostNetwork {
 		inferred := inferHostNetworkPorts(inspect)
-		for port, protocol := range inferred {
-			if publishedHostPorts[port] {
+		for portKey, protocol := range inferred {
+			port, _ := netutil.PortFromString(strings.SplitN(portKey, "/", 2)[0])
+			if publishedHostPorts[portKey] {
 				continue
 			}
-			accessIPs := state.host.Addresses
+			accessIPs := accessIPsFor(state.host.PreferredIP, state.host)
 			endpoint := model.Endpoint{
 				Service:       service,
 				Container:     name,
@@ -169,7 +171,7 @@ func buildEndpoints(inspect docker.ContainerInspect, state *scanState) []model.E
 
 	for spec := range inspect.Config.ExposedPorts {
 		containerPort, protocol, ok := netutil.ParsePortSpec(spec)
-		if !ok || publishedContainerPorts[containerPort] {
+		if !ok || publishedContainerPorts[fmt.Sprintf("%d/%s", containerPort, protocol)] {
 			continue
 		}
 		if hostNetwork {
@@ -181,8 +183,18 @@ func buildEndpoints(inspect docker.ContainerInspect, state *scanState) []model.E
 			}
 			networkModel, ok := state.modelNetworks[networkName]
 			networkID := ""
+			driver := ""
 			if ok {
 				networkID = networkModel.ID
+				driver = networkModel.Driver
+			}
+			scope := model.ScopeContainer
+			note := "仅容器网络内可见，未发布到宿主机"
+			tags := append(append([]string{}, baseTags...), "internal", string(protocol))
+			if driver == "macvlan" || driver == "ipvlan" {
+				scope = model.ScopeLAN
+				note = "macvlan/ipvlan 容器，直接持有局域网 IP"
+				tags = append(append([]string{}, baseTags...), "lan", string(protocol))
 			}
 			urlValue := "http://" + net.JoinHostPort(settings.IPAddress, strconv.Itoa(containerPort))
 			endpoint := model.Endpoint{
@@ -190,7 +202,7 @@ func buildEndpoints(inspect docker.ContainerInspect, state *scanState) []model.E
 				Container:     name,
 				Image:         image,
 				Stack:         stack,
-				Scope:         model.ScopeContainer,
+				Scope:         scope,
 				Source:        model.SourceExposed,
 				Status:        status,
 				IP:            settings.IPAddress,
@@ -200,12 +212,12 @@ func buildEndpoints(inspect docker.ContainerInspect, state *scanState) []model.E
 				Network:       networkName,
 				NetworkID:     networkID,
 				URL:           urlValue,
-				Tags:          dedupeTags(append(append([]string{}, baseTags...), "internal", string(protocol))),
+				Tags:          dedupeTags(tags),
 				Favorite:      labels["docklens.favorite"] == "true",
 				Hidden:        labels["docklens.hide"] == "true" || labels["docklens.hide.internal"] == "true",
 				Confidence:    80,
 				UpdatedAt:     updatedAt,
-				Note:          "仅容器网络内可见，未发布到宿主机",
+				Note:          note,
 			}
 			endpoint.ID = makeEndpointID(endpoint)
 			endpoints = append(endpoints, endpoint)
@@ -234,7 +246,16 @@ func primaryNetwork(values map[string]*docker.EndpointSettings) (string, *docker
 
 func accessIPsFor(bindIP string, host hostinfo.Info) []model.AccessIP {
 	if netutil.IsWildcardIP(bindIP) {
-		return host.Addresses
+		wantIPv6 := bindIP == "::"
+		out := make([]model.AccessIP, 0, len(host.Addresses))
+		for _, item := range host.Addresses {
+			if strings.Contains(item.IP, ":") == wantIPv6 {
+				out = append(out, item)
+			}
+		}
+		if len(out) > 0 {
+			return out
+		}
 	}
 	return []model.AccessIP{{IP: bindIP, Kind: classifyIP(bindIP), Preferred: true}}
 }
@@ -288,17 +309,17 @@ func makeEndpointID(endpoint model.Endpoint) string {
 	)
 }
 
-func inferHostNetworkPorts(inspect docker.ContainerInspect) map[int]model.Protocol {
-	ports := make(map[int]model.Protocol)
+func inferHostNetworkPorts(inspect docker.ContainerInspect) map[string]model.Protocol {
+	ports := make(map[string]model.Protocol)
 	add := func(value string) {
 		if port, ok := netutil.PortFromString(value); ok {
-			ports[port] = model.ProtocolTCP
+			ports[fmt.Sprintf("%d/%s", port, model.ProtocolTCP)] = model.ProtocolTCP
 		}
 	}
 	for spec := range inspect.Config.ExposedPorts {
 		port, protocol, ok := netutil.ParsePortSpec(spec)
 		if ok {
-			ports[port] = protocol
+			ports[fmt.Sprintf("%d/%s", port, protocol)] = protocol
 		}
 	}
 	for _, key := range []string{"PORT", "HTTP_PORT", "HTTPS_PORT", "LISTEN_PORT", "SERVER_PORT", "WEB_PORT"} {

@@ -2,6 +2,18 @@ import type { Endpoint } from "../types";
 
 const hostScopes = new Set(["HOST", "LAN", "HOST_NET", "LOOPBACK"]);
 
+export function isHostPortScope(scope: Endpoint["scope"]): boolean {
+  return hostScopes.has(scope);
+}
+
+export function isActiveHostPortEndpoint(endpoint: Endpoint): boolean {
+  return endpoint.status === "running" && isHostPortScope(endpoint.scope);
+}
+
+function ipFamily(ip: string): 4 | 6 {
+  return ip.includes(":") ? 6 : 4;
+}
+
 export interface PortConflict {
   key: string;
   port: number;
@@ -10,31 +22,33 @@ export interface PortConflict {
   endpoints: Endpoint[];
 }
 
-function endpointAddressSet(endpoint: Endpoint): { wildcard: boolean; ips: Set<string> } {
+function endpointAddressSet(endpoint: Endpoint): {
+  wildcard: boolean;
+  family: 4 | 6;
+  ips: Set<string>;
+} {
   const ips = new Set<string>();
-  if (endpoint.ip && endpoint.ip !== "0.0.0.0" && endpoint.ip !== "::") {
-    ips.add(endpoint.ip);
-  }
+  const wildcard = endpoint.ip === "0.0.0.0" || endpoint.ip === "::" || endpoint.ip === "";
+  const family: 4 | 6 = endpoint.ip === "::" ? 6 : wildcard ? 4 : ipFamily(endpoint.ip);
+  if (!wildcard) ips.add(endpoint.ip);
   for (const item of endpoint.accessIps ?? []) {
-    if (item.ip && item.ip !== "0.0.0.0" && item.ip !== "::") {
+    if (item.ip && item.ip !== "0.0.0.0" && item.ip !== "::" && ipFamily(item.ip) === family) {
       ips.add(item.ip);
     }
   }
-  return {
-    wildcard: endpoint.ip === "0.0.0.0" || endpoint.ip === "::" || endpoint.ip === "",
-    ips,
-  };
+  return { wildcard, family, ips };
 }
 
 function isLoopback(ip: string): boolean {
-  return ip === "127.0.0.1" || ip === "::1";
+  return ip.startsWith("127.") || ip === "::1";
 }
 
 function addressesOverlap(a: Endpoint, b: Endpoint): boolean {
   const left = endpointAddressSet(a);
   const right = endpointAddressSet(b);
 
-  if (left.wildcard && right.wildcard) return true;
+  if (left.wildcard && right.wildcard) return left.family === right.family;
+  if (left.family !== right.family) return false;
   if (left.wildcard) {
     for (const ip of right.ips) {
       if (left.ips.has(ip) || isLoopback(ip)) return true;
@@ -63,7 +77,7 @@ export function findPortConflicts(endpoints: Endpoint[]): PortConflict[] {
   const groups = new Map<string, Endpoint[]>();
 
   for (const endpoint of endpoints) {
-    if (!hostScopes.has(endpoint.scope)) continue;
+    if (!isActiveHostPortEndpoint(endpoint)) continue;
     if (endpoint.protocol !== "tcp" && endpoint.protocol !== "udp") continue;
     const key = `${endpoint.port}/${endpoint.protocol}`;
     const group = groups.get(key);

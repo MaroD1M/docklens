@@ -1,6 +1,6 @@
 services:
   docklens:
-    image: ghcr.io/marod1m/docklens:latest
+    image: ${DOCKLENS_IMAGE:-ghcr.io/marod1m/docklens}:${DOCKLENS_VERSION:-latest}
     container_name: docklens
     restart: unless-stopped
     network_mode: host

@@ -528,3 +528,28 @@
 .tools-pre {
   font-size: 11.5px;
 }
+
+.tools-field,
+.tools-hint {
+  font-size: 11.5px;
+}
+
+.tools-result-row span {
+  font-size: 11px;
+}
+
+.tools-result-row span.mono {
+  font-size: 11px;
+}
+
+.tools-free-next span {
+  font-size: 11px;
+}
+
+.tools-format-copy span {
+  font-size: 11px;
+}
+
+.tools-error {
+  font-size: 11.5px;
+}

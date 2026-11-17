@@ -32,7 +32,7 @@ Container Manager → 项目 → 新增，项目路径选 `/volume1/docker/dockl
 ```yaml
 services:
   docklens:
-    image: ghcr.io/marod1m/docklens:latest
+    image: ${DOCKLENS_IMAGE:-ghcr.io/marod1m/docklens}:${DOCKLENS_VERSION:-latest}
     container_name: docklens
     restart: unless-stopped
     network_mode: host
@@ -57,7 +57,7 @@ services:
       start_period: 10s
 ```
 
-也可以直接使用仓库中的 `docker-compose.synology.yml`。启动后访问 `http://<NAS-IP>:7577`。需要固定版本时把 `latest` 改成具体 tag。数据保存在 `./data`，备份时复制该目录即可。
+也可以直接使用仓库中的 `docker-compose.synology.yml`。启动后访问 `http://<NAS-IP>:7577`。需要固定版本时设置 `DOCKLENS_VERSION`。数据保存在 `./data`，备份时复制该目录即可。
 
 ## Docker Compose
 
@@ -87,7 +87,7 @@ docker compose -f docker-compose.pull.yml up -d
 |---|---|---|
 | `DOCKLENS_BIND` | `0.0.0.0` | 面板绑定地址 |
 | `DOCKLENS_PORT` | `7577` | 面板端口 |
-| `DOCKLENS_VERSION` | 见 `VERSION` | 镜像版本 |
+| `DOCKLENS_VERSION` | `0.0.1` | 镜像版本；未配置时回退 `latest` |
 | `DOCKLENS_HOST_IP` | 空 | bridge 模式下的 NAS 局域网 IP |
 | `DOCKLENS_DATA_DIR` | `./data` | 元数据目录 |
 | `TZ` | `Asia/Shanghai` | 时区 |

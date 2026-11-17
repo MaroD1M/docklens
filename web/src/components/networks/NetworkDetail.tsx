@@ -80,7 +80,11 @@ export function NetworkDetail({ network }: NetworkDetailProps) {
                 <Badge tone={kindTone(entry.kind)}>{ipKindLabels[entry.kind]}</Badge>
               </div>
               <div className="net-ip-meta">
-                <span>{entry.container ?? "—"}</span>
+                <span>
+                  {entry.container && entry.container !== ipKindLabels[entry.kind]
+                    ? entry.container
+                    : "—"}
+                </span>
                 {entry.aliases?.filter((alias) => alias !== entry.container).length ? (
                   <em>{entry.aliases.filter((alias) => alias !== entry.container).join(", ")}</em>
                 ) : null}

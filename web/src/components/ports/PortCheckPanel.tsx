@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { Endpoint } from "../../types";
 import { useHostInfo } from "../../data/DataProvider";
-import { primaryIp, sourceLabels, statusLabels } from "../../lib/format";
+import { sourceLabels, statusLabels } from "../../lib/format";
+import { isActiveHostPortEndpoint } from "../../lib/conflicts";
 import { Badge } from "../ui/Badge";
 import { CopyButton } from "../ui/CopyButton";
 import { HoloCard } from "../ui/HoloCard";
@@ -16,13 +17,21 @@ interface CheckResult {
   occupied: boolean;
   matches: Endpoint[];
   address: string;
+  protocol: PortProtocol;
+}
+
+function normalizeIp(value: string): string {
+  return value.trim().replace(/^\[/, "").replace(/\]$/, "");
 }
 
 function validateIp(value: string): string | null {
   if (!value) return null;
-  const normalized = value.replace(/^\[/, "").replace(/\]$/, "");
+  const normalized = normalizeIp(value);
+  if (normalized === ":" || normalized === "") return "IP 格式不正确（IPv4/IPv6）。";
   if (normalized.includes(":")) {
-    return /^[0-9a-fA-F:.]+$/.test(normalized) ? null : "IP 格式不正确（IPv4/IPv6）。";
+    return /^[0-9a-fA-F:]+$/.test(normalized) && /[0-9a-fA-F]/.test(normalized)
+      ? null
+      : "IP 格式不正确（IPv4/IPv6）。";
   }
   const parts = normalized.split(".");
   if (parts.length !== 4 || parts.some((part) => !/^\d{1,3}$/.test(part) || Number(part) > 255)) {
@@ -37,22 +46,17 @@ function endpointIps(endpoint: Endpoint): string[] {
 
 export function PortCheckPanel({ endpoints }: PortCheckPanelProps) {
   const host = useHostInfo();
-  const [ip, setIp] = useState("");
+  const [ip, setIp] = useState(() => host.ip);
   const [port, setPort] = useState("8080");
   const [protocol, setProtocol] = useState<PortProtocol>("tcp");
   const [scanning, setScanning] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<CheckResult | null>(null);
   const timer = useRef<number | undefined>(undefined);
-  const previousDefaultIp = useRef(host.ip);
+  const touched = useRef(false);
 
   useEffect(() => {
-    const hostIp = host.ip;
-    if (!hostIp) return;
-    setIp((current) =>
-      current === "" || current === previousDefaultIp.current ? hostIp : current,
-    );
-    previousDefaultIp.current = hostIp;
+    if (!touched.current && host.ip) setIp(host.ip);
   }, [host.ip]);
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
@@ -65,7 +69,8 @@ export function PortCheckPanel({ endpoints }: PortCheckPanelProps) {
       setResult(null);
       return;
     }
-    const ipError = validateIp(ip.trim());
+    const targetIp = normalizeIp(ip);
+    const ipError = validateIp(targetIp);
     if (ipError) {
       setError(ipError);
       setResult(null);
@@ -77,24 +82,27 @@ export function PortCheckPanel({ endpoints }: PortCheckPanelProps) {
     setScanning(true);
     window.clearTimeout(timer.current);
     timer.current = window.setTimeout(() => {
-      const targetIp = ip.trim();
       const portMatches = endpoints.filter(
-        (endpoint) => endpoint.protocol === protocol && endpoint.port === portNumber,
+        (endpoint) =>
+          isActiveHostPortEndpoint(endpoint) &&
+          endpoint.protocol === protocol &&
+          endpoint.port === portNumber,
       );
+      const ipv6Target = targetIp.includes(":");
       const matches = targetIp
         ? portMatches.filter(
             (endpoint) =>
               endpointIps(endpoint).includes(targetIp) ||
-              endpoint.ip === "0.0.0.0" ||
-              endpoint.ip === "::",
+              (endpoint.ip === "0.0.0.0" && !ipv6Target) ||
+              (endpoint.ip === "::" && ipv6Target),
           )
         : portMatches;
-      const match = matches[0];
-      const addressIp = targetIp || (match ? primaryIp(match) : "0.0.0.0");
+      const addressIp = targetIp || host.ip || "0.0.0.0";
       setResult({
         occupied: matches.length > 0,
         matches,
         address: formatHostPort(addressIp, portNumber),
+        protocol,
       });
       setScanning(false);
     }, 480);
@@ -118,8 +126,12 @@ export function PortCheckPanel({ endpoints }: PortCheckPanelProps) {
                 className="input mono"
                 type="text"
                 value={ip}
-                placeholder={host.ip || "192.168.1.20"}
-                onChange={(event) => setIp(event.target.value)}
+                placeholder={host.ip || "留空检查全部地址"}
+                onChange={(event) => {
+                  touched.current = true;
+                  setIp(event.target.value);
+                  setResult(null);
+                }}
                 aria-label="要检查的 IP 地址"
               />
             </label>
@@ -132,7 +144,10 @@ export function PortCheckPanel({ endpoints }: PortCheckPanelProps) {
                 min={1}
                 max={65535}
                 value={port}
-                onChange={(event) => setPort(event.target.value)}
+                onChange={(event) => {
+                  setPort(event.target.value);
+                  setResult(null);
+                }}
                 aria-label="要检查的端口"
               />
             </label>
@@ -147,7 +162,10 @@ export function PortCheckPanel({ endpoints }: PortCheckPanelProps) {
                   type="button"
                   className={protocol === item ? "is-active" : ""}
                   aria-pressed={protocol === item}
-                  onClick={() => setProtocol(item)}
+                  onClick={() => {
+                    setProtocol(item);
+                    setResult(null);
+                  }}
                 >
                   {item.toUpperCase()}
                 </button>
@@ -175,10 +193,10 @@ export function PortCheckPanel({ endpoints }: PortCheckPanelProps) {
             <div className={`ports-result ${result.occupied ? "is-occupied" : "is-free"}`}>
               <div className="ports-result-head">
                 <Badge tone={result.occupied ? "red" : "green"} dot>
-                  {result.occupied ? "已占用" : "空闲"}
+                  {result.occupied ? "发现占用" : "未发现"}
                 </Badge>
                 <span className="mono">{result.address}</span>
-                <span className="ports-result-proto">{protocol.toUpperCase()}</span>
+                <span className="ports-result-proto">{(result.protocol ?? protocol).toUpperCase()}</span>
               </div>
 
               {result.occupied && first ? (
@@ -212,10 +230,10 @@ export function PortCheckPanel({ endpoints }: PortCheckPanelProps) {
                   <p className="ports-result-free-text">端点数据中未发现占用。</p>
                   <div className="ports-result-actions">
                     <CopyButton
-                      value={`${result.address}/${protocol}`}
+                      value={`${result.address}/${result.protocol ?? protocol}`}
                       label="复制查询结果"
                       variant="chip"
-                      toast={`已复制 ${result.address}/${protocol}`}
+                      toast={`已复制 ${result.address}/${result.protocol ?? protocol}`}
                     />
                   </div>
                 </>

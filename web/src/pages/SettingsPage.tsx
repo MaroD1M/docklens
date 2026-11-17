@@ -183,17 +183,23 @@ export function SettingsPage() {
     setSettings((current) => ({ ...current, [key]: value }));
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-      void fetch("/api/v1/settings", {
+    } catch {
+      push("无法写入本地存储，请检查浏览器权限", "warning");
+      return;
+    }
+    try {
+      const response = await fetch("/api/v1/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(settings),
-      }).catch(() => undefined);
+      });
+      if (!response.ok) throw new Error("save failed");
       push("设置已保存");
     } catch {
-      push("无法写入本地存储，请检查浏览器权限", "warning");
+      push("已保存到本机，服务端未同步", "warning");
     }
   };
 

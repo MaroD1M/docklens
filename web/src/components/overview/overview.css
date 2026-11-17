@@ -991,3 +991,6 @@
     margin-left: 0;
   }
 }
+
+.ov-legend-dot--overlay { background: var(--violet); }
+.ov-legend-dot--external { background: var(--text-secondary); }

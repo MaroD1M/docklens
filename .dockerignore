@@ -11,6 +11,7 @@ web/.vite
 .env.*
 .github
 *.md
-LICENSE
 VERSION
 /docklens-notes
+web/tsconfig.tsbuildinfo
+web/.vite-temp

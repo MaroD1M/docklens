@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        VERSION: ${DOCKLENS_VERSION:-dev}
+        VERSION: ${DOCKLENS_VERSION:-latest}
         COMMIT: ${DOCKLENS_COMMIT:-local}
         BUILD_DATE: ${DOCKLENS_BUILD_DATE:-unknown}
     container_name: docklens
