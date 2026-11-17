@@ -27,12 +27,12 @@ DockLens 是一个 Docker 容器 IP、端口和端点可视化面板。单镜像
 
 ## 群晖一键部署
 
-Container Manager → 项目 → 新增，项目路径选 `/volume1/docker/docklens`，直接粘贴下面内容。通常只需要修改 `DOCKLENS_LISTEN` 里的端口，其他保持默认。
+Container Manager → 项目 → 新增，项目路径选 `/volume1/docker/docklens`，直接粘贴下面内容。镜像固定为当前版本，通常只需要修改 `DOCKLENS_LISTEN` 里的端口，其他保持默认。
 
 ```yaml
 services:
   docklens:
-    image: ${DOCKLENS_IMAGE:-ghcr.io/marod1m/docklens}:${DOCKLENS_VERSION:-latest}
+    image: ghcr.io/marod1m/docklens:v0.0.2
     container_name: docklens
     restart: unless-stopped
     network_mode: host
@@ -57,7 +57,7 @@ services:
       start_period: 10s
 ```
 
-也可以直接使用仓库中的 `docker-compose.synology.yml`。启动后访问 `http://<NAS-IP>:7577`。需要固定版本时设置 `DOCKLENS_VERSION`。数据保存在 `./data`，备份时复制该目录即可。
+也可以直接使用仓库中的 `docker-compose.synology.yml`。启动后访问 `http://<NAS-IP>:7577`。升级时修改其中的 image 标签。数据保存在 `./data`，备份时复制该目录即可。
 
 ## Docker Compose
 
