@@ -32,7 +32,7 @@ Container Manager → 项目 → 新增，项目路径选 `/volume1/docker/dockl
 ```yaml
 services:
   docklens:
-    image: ghcr.io/marod1m/docklens:v0.0.2
+    image: ghcr.io/marod1m/docklens:v0.0.3
     container_name: docklens
     restart: unless-stopped
     network_mode: host
@@ -87,7 +87,7 @@ docker compose -f docker-compose.pull.yml up -d
 |---|---|---|
 | `DOCKLENS_BIND` | `0.0.0.0` | 面板绑定地址 |
 | `DOCKLENS_PORT` | `7577` | 面板端口 |
-| `DOCKLENS_VERSION` | `0.0.2` | 镜像版本；未配置时回退 `latest` |
+| `DOCKLENS_VERSION` | `0.0.3` | 镜像版本；未配置时回退 `latest` |
 | `DOCKLENS_HOST_IP` | 空 | bridge 模式下的 NAS 局域网 IP |
 | `DOCKLENS_DATA_DIR` | `./data` | 元数据目录 |
 | `TZ` | `Asia/Shanghai` | 时区 |

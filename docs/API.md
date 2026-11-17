@@ -59,7 +59,7 @@ Docker 不可用时返回 `degraded`，但 HTTP 状态仍为 `200`。
   "scanning": false,
   "lastScan": "2026-11-16T10:32:00Z",
   "uptime": "12m30s",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "commit": "abc1234",
   "buildDate": "2026-11-16T10:00:00Z"
 }
