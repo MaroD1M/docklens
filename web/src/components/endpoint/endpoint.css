@@ -54,7 +54,7 @@
 
 .ep-search > svg {
   flex: none;
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
 .ep-search input {
@@ -63,11 +63,11 @@
   border: 0;
   outline: 0;
   background: transparent;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .ep-search input::placeholder {
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
 .ep-search-clear {
@@ -77,7 +77,7 @@
   border: 0;
   border-radius: 4px;
   background: transparent;
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
 .ep-search-clear:hover {
@@ -93,7 +93,7 @@
   border: 0;
   border-radius: 4px;
   background: transparent;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   cursor: help;
 }
 
@@ -120,9 +120,9 @@
 }
 
 .ep-filter-label {
-  font-size: 9.5px;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -136,7 +136,7 @@
 }
 
 .ep-count {
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--text-secondary);
 }
 
@@ -147,8 +147,8 @@
 }
 
 .ep-filter-summary {
-  font-size: 10.5px;
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--text-secondary);
   overflow-wrap: anywhere;
 }
 
@@ -178,7 +178,7 @@
   align-items: center;
   gap: 6px;
   white-space: nowrap;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .ep-status-inline {
@@ -196,18 +196,18 @@
 }
 
 .ep-net-cell .mono {
-  font-size: 11px;
+  font-size: 12.5px;
 }
 
 .ep-net-sub,
 .ep-scope-hint {
-  font-size: 9.5px;
-  color: var(--text-muted);
+  font-size: 11.5px;
+  color: var(--text-secondary);
   white-space: nowrap;
 }
 
 .ep-address-copy {
-  max-width: 210px;
+  max-width: 230px;
 }
 
 .ep-address-copy span {
@@ -216,8 +216,88 @@
 }
 
 .ep-row-actions .icon-btn {
-  width: 28px;
+  width: 30px;
+  height: 30px;
+}
+
+.ep-page .chip {
   height: 28px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+.ep-page .segmented button {
+  height: 28px;
+  font-size: 12px;
+}
+
+.ep-page .ep-table {
+  min-width: 960px;
+  font-size: 12.5px;
+}
+
+.ep-page .ep-table th {
+  padding: 11px 12px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+.ep-page .ep-table td {
+  padding: 11px 12px;
+  font-size: 12.5px;
+}
+
+.ep-page .ep-table .service-mark {
+  width: 30px;
+  height: 30px;
+  font-size: 12px;
+}
+
+.ep-page .ep-table .service-copy strong {
+  max-width: 200px;
+  font-size: 13px;
+}
+
+.ep-page .ep-table .service-copy span {
+  max-width: 200px;
+  color: var(--text-secondary);
+  font-size: 11.5px;
+}
+
+.ep-page .ep-table .ip-primary {
+  font-size: 12.5px;
+}
+
+.ep-page .ep-table .ip-secondary {
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+.ep-page .ep-table .port-map {
+  gap: 6px;
+  font-size: 12px;
+}
+
+.ep-page .ep-table .port-map strong {
+  font-weight: 600;
+}
+
+.ep-page .ep-table .port-map em {
+  color: var(--text-secondary);
+}
+
+.ep-page .ep-table .badge {
+  font-size: 11px;
+}
+
+.ep-page .ep-table .ep-status {
+  font-size: 12px;
+}
+
+.ep-page .ep-table .copy-btn-chip {
+  height: 24px;
+  font-size: 12px;
 }
 
 .ep-table-wrap {
@@ -271,7 +351,7 @@
   padding-right: 8px;
   margin-right: 2px;
   border-right: 1px solid var(--border-soft);
-  font-size: 11.5px;
+  font-size: 12px;
   color: var(--text-secondary);
   white-space: nowrap;
 }
@@ -283,7 +363,8 @@
 }
 
 .ep-bulk-bar .copy-btn {
-  height: 28px;
+  height: 30px;
+  font-size: 11.5px;
 }
 
 
@@ -339,7 +420,7 @@
 }
 
 .ep-card-title strong {
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -347,8 +428,8 @@
 }
 
 .ep-card-title span {
-  font-size: 10px;
-  color: var(--text-muted);
+  font-size: 11.5px;
+  color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -365,7 +446,7 @@
   border-radius: 8px;
   background: rgba(143, 166, 191, 0.04);
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: 12.5px;
   overflow-wrap: anywhere;
 }
 
@@ -377,7 +458,7 @@
 }
 
 .ep-card-badges .badge {
-  font-size: 9.5px;
+  font-size: 11px;
 }
 
 .ep-card-tags {
@@ -390,16 +471,16 @@
 .ep-tag {
   display: inline-flex;
   align-items: center;
-  padding: 1px 6px;
+  padding: 2px 7px;
   border-radius: 5px;
   border: 1px solid var(--border-soft);
   background: rgba(143, 166, 191, 0.06);
   color: var(--text-secondary);
-  font-size: 9.5px;
+  font-size: 11px;
 }
 
 .ep-tag-more {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-family: var(--font-mono);
 }
 
@@ -412,14 +493,14 @@
 }
 
 .ep-card-actions .btn {
-  height: 28px;
-  padding: 0 9px;
-  font-size: 10.5px;
+  height: 30px;
+  padding: 0 10px;
+  font-size: 11.5px;
 }
 
 .ep-card-actions .icon-btn {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
 }
 
 .ep-card-actions .icon-btn:first-of-type {
@@ -433,8 +514,8 @@
 
 .ep-drawer-eyebrow {
   margin-bottom: 4px;
-  font-size: 9.5px;
-  letter-spacing: 0.16em;
+  font-size: 11px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--hologram);
 }
@@ -449,8 +530,8 @@
 .ep-drawer-sub {
   margin: 5px 0 0;
   font-family: var(--font-mono);
-  font-size: 10.5px;
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--text-secondary);
   overflow-wrap: anywhere;
 }
 
@@ -462,6 +543,47 @@
 
 .ep-drawer .drawer-tabs {
   overflow-x: auto;
+}
+
+.ep-drawer .drawer-tab {
+  padding: 11px 10px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.ep-drawer .drawer-tab.is-active {
+  color: var(--hologram);
+}
+
+.ep-drawer .detail-item span {
+  color: var(--text-secondary);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.ep-drawer .detail-item strong {
+  font-size: 12.5px;
+}
+
+.ep-drawer .detail-item .mono {
+  font-size: 12px;
+}
+
+.ep-drawer .copy-btn {
+  font-size: 12px;
+}
+
+.ep-drawer .copy-btn-chip {
+  height: 24px;
+  font-size: 11.5px;
+}
+
+.ep-drawer .badge {
+  font-size: 11.5px;
+}
+
+.ep-drawer .port-diagram {
+  font-size: 13px;
 }
 
 .ep-tab-panel {
@@ -488,7 +610,7 @@
 }
 
 .ep-drawer-section-title {
-  font-size: 11.5px;
+  font-size: 13px;
   font-weight: 600;
 }
 
@@ -498,7 +620,7 @@
   border-left: 2px solid var(--hologram);
   background: rgba(56, 232, 255, 0.045);
   color: var(--text-secondary);
-  font-size: 11.5px;
+  font-size: 12.5px;
   line-height: 1.6;
 }
 
@@ -535,14 +657,14 @@
 
 .ep-address-main strong {
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 500;
   overflow-wrap: anywhere;
 }
 
 .ep-address-main span {
-  font-size: 9.5px;
-  color: var(--text-muted);
+  font-size: 11.5px;
+  color: var(--text-secondary);
 }
 
 .ep-address-actions {
@@ -584,7 +706,7 @@
   width: 38%;
   flex: none;
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--hologram);
   overflow-wrap: anywhere;
 }
@@ -593,14 +715,14 @@
   flex: 1;
   min-width: 0;
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--text-secondary);
   overflow-wrap: anywhere;
 }
 
 .ep-env-value.is-redacted {
   letter-spacing: 0.12em;
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
 .ep-env-toggle {
@@ -660,19 +782,19 @@
 }
 
 .ep-timeline-meta {
-  font-size: 9.5px;
-  color: var(--text-muted);
+  font-size: 11px;
+  color: var(--text-secondary);
   margin-bottom: 2px;
 }
 
 .ep-timeline-title {
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 600;
 }
 
 .ep-timeline-text {
   margin-top: 2px;
-  font-size: 10.5px;
+  font-size: 12px;
   line-height: 1.55;
   color: var(--text-secondary);
   overflow-wrap: anywhere;
@@ -680,6 +802,10 @@
 
 
 @media (max-width: 720px) {
+  .ep-page-selected {
+    padding-bottom: 140px;
+  }
+
   .ep-toolbar {
     padding: 10px;
   }
@@ -731,7 +857,7 @@
   }
 
   .ep-drawer-sub {
-    max-width: 190px;
+    max-width: 220px;
   }
 
   .ep-env-key {

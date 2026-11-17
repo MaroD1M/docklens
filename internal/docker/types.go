@@ -1,5 +1,10 @@
 package docker
 
+type Info struct {
+	Name          string `json:"Name"`
+	ServerVersion string `json:"ServerVersion"`
+}
+
 type Version struct {
 	Version       string `json:"Version"`
 	APIVersion    string `json:"ApiVersion"`

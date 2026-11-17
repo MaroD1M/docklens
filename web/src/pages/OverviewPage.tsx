@@ -29,6 +29,7 @@ import { StatusDot } from "../components/ui/StatusDot";
 import { useToast } from "../components/ui/Toast";
 import { endpoints, networks, overviewStats, quickAccess, recentEvents } from "../data/mock";
 import { useDataVersion, useHostInfo } from "../data/DataProvider";
+import { findPortConflicts } from "../lib/conflicts";
 import { requestRefresh } from "../lib/api";
 import {
   endpointAddress,
@@ -37,7 +38,7 @@ import {
   sourceLabels,
   statusLabels,
 } from "../lib/format";
-import type { Endpoint, RecentEvent } from "../types";
+import type { RecentEvent } from "../types";
 import "../components/overview/overview.css";
 
 type MetricTone = "up" | "warn" | "danger";
@@ -91,19 +92,8 @@ export function OverviewPage() {
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
-  const portConflict = useMemo(() => {
-    const groups = new Map<string, Endpoint[]>();
-    for (const endpoint of endpoints) {
-      if (endpoint.hidden) continue;
-      const key = `${endpoint.ip}:${endpoint.port}/${endpoint.protocol}`;
-      groups.set(key, [...(groups.get(key) ?? []), endpoint]);
-    }
-    return (
-      [...groups.values()].find(
-        (group) => new Set(group.map((endpoint) => endpoint.service)).size > 1,
-      ) ?? null
-    );
-  }, [dataVersion]);
+  const portConflicts = useMemo(() => findPortConflicts(endpoints), [dataVersion]);
+  const portConflict = portConflicts[0] ?? null;
 
   const tcpCount = endpoints.filter((endpoint) => endpoint.protocol === "tcp").length;
   const udpCount = endpoints.filter((endpoint) => endpoint.protocol === "udp").length;
@@ -117,14 +107,13 @@ export function OverviewPage() {
   const attentionItems: AttentionItem[] = [];
 
   if (portConflict) {
-    const [first, second] = portConflict;
     attentionItems.push({
       id: "port-conflict",
       severity: "danger",
-      title: `${first.port} 端口被两个服务占用`,
-      detail: `${first.service} 与 ${second.service} 同时监听 ${first.port}/${first.protocol}`,
+      title: `${portConflict.port}/${portConflict.protocol} 端口冲突`,
+      detail: `${portConflict.services.join("、")} 使用了同一端口`,
       actionLabel: "查看端点",
-      to: `/endpoints?q=${encodeURIComponent(`:${first.port}`)}`,
+      to: `/endpoints?q=${encodeURIComponent(`:${portConflict.port}`)}`,
       icon: TriangleAlert,
     });
   }
@@ -193,9 +182,9 @@ export function OverviewPage() {
     {
       key: "conflicts",
       label: "冲突",
-      value: overviewStats.conflicts,
+      value: portConflicts.length,
       icon: TriangleAlert,
-      foot: portConflict ? `${portConflict[0].port}/tcp 待处理` : "无端口冲突",
+      foot: portConflict ? `${portConflict.port}/${portConflict.protocol} 待处理` : "无端口冲突",
       to: "/ports",
       tone: "danger",
       glow: "danger",

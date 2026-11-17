@@ -1,4 +1,5 @@
 import type { Endpoint, PortCell } from "../../types";
+import { findPortConflicts } from "../../lib/conflicts";
 
 export type PortProtocol = "tcp" | "udp";
 
@@ -10,11 +11,35 @@ export interface PortRange {
   end: number;
 }
 
+export const MIN_PORT = 1;
+export const MAX_PORT = 65535;
+export const PORT_WINDOW_SIZE = 256;
+
+export function createWindow(start: number): PortRange {
+  const parsed = Number.isFinite(start) ? Math.trunc(start) : MIN_PORT;
+  const safeStart = Math.min(Math.max(parsed, MIN_PORT), MAX_PORT);
+  const end = Math.min(safeStart + PORT_WINDOW_SIZE - 1, MAX_PORT);
+  return { label: `${safeStart}–${end}`, start: safeStart, end };
+}
+
+export function shiftWindow(start: number, direction: -1 | 1): PortRange {
+  return createWindow(start + direction * PORT_WINDOW_SIZE);
+}
+
+export function windowForPort(port: number): PortRange {
+  const target = Math.min(Math.max(Math.trunc(port) || MIN_PORT, MIN_PORT), MAX_PORT);
+  return createWindow(target - Math.floor(PORT_WINDOW_SIZE / 2));
+}
+
 export const PORT_RANGES: PortRange[] = [
   { label: "1–256", start: 1, end: 256 },
   { label: "257–512", start: 257, end: 512 },
-  { label: "513–1024", start: 513, end: 1024 },
-  { label: "1025–2048", start: 1025, end: 2048 },
+  { label: "513–768", start: 513, end: 768 },
+  { label: "769–1024", start: 769, end: 1024 },
+  { label: "1025–1280", start: 1025, end: 1280 },
+  { label: "1281–1536", start: 1281, end: 1536 },
+  { label: "1537–1792", start: 1537, end: 1792 },
+  { label: "1793–2048", start: 1793, end: 2048 },
 ];
 
 export interface PortSlot {
@@ -61,14 +86,11 @@ export function groupEndpoints(endpoints: Endpoint[]): Map<string, Endpoint[]> {
 export function findConflicts(
   endpoints: Endpoint[],
 ): { protocol: PortProtocol; port: number; endpoints: Endpoint[] }[] {
-  const grouped = groupEndpoints(endpoints);
-  const result: { protocol: PortProtocol; port: number; endpoints: Endpoint[] }[] = [];
-  for (const list of grouped.values()) {
-    if (list.length > 1) {
-      result.push({ protocol: list[0].protocol === "udp" ? "udp" : "tcp", port: list[0].port, endpoints: list });
-    }
-  }
-  return result.sort((a, b) => a.port - b.port);
+  return findPortConflicts(endpoints).map((item) => ({
+    protocol: item.protocol === "udp" ? "udp" : "tcp",
+    port: item.port,
+    endpoints: item.endpoints,
+  }));
 }
 
 export function usedPortsFor(
@@ -105,6 +127,9 @@ export function buildPortSlots(
   udpPorts: PortCell[] = [],
 ): PortSlot[] {
   const grouped = groupEndpoints(endpoints);
+  const conflictKeys = new Set(
+    findPortConflicts(endpoints).map((item) => keyFor(item.protocol, item.port)),
+  );
   const cells = new Map<number, PortCell>();
   const sourceCells = protocol === "tcp" ? portCells : udpPorts;
   for (const cell of sourceCells) {
@@ -116,9 +141,9 @@ export function buildPortSlots(
     const matching = grouped.get(keyFor(protocol, port)) ?? [];
     const cell = cells.get(port);
     let state: PortState = "free";
-    if (matching.length > 1) {
+    if (conflictKeys.has(keyFor(protocol, port))) {
       state = "conflict";
-    } else if (matching.length === 1) {
+    } else if (matching.length > 0) {
       const endpoint = matching[0];
       if (endpoint.hidden) {
         state = "hidden";

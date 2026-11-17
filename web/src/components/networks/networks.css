@@ -39,7 +39,7 @@
 }
 
 .net-warning-title strong {
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .net-warning-item {
@@ -57,7 +57,7 @@
 
 .net-warning-text {
   margin: 0;
-  font-size: 11.5px;
+  font-size: 12.5px;
   color: var(--text-secondary);
   line-height: 1.6;
 }
@@ -72,8 +72,8 @@
   align-items: center;
   gap: 6px;
   flex-wrap: wrap;
-  font-size: 10px;
-  color: var(--text-muted);
+  font-size: 11.5px;
+  color: var(--text-secondary);
 }
 
 .net-warning-affected {
@@ -85,12 +85,12 @@
 .net-warning-affected em {
   font-style: normal;
   color: var(--amber);
-  font-size: 9.5px;
+  font-size: 11.5px;
 }
 
 .net-cidr-code {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-secondary);
   border: 1px solid var(--border-soft);
   border-radius: 4px;
@@ -99,14 +99,54 @@
   white-space: nowrap;
 }
 
-.net-section {
-  margin-bottom: 18px;
+.net-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
+  gap: 20px;
+  align-items: start;
+}
+
+.net-list-pane {
+  min-width: 0;
+}
+
+.net-detail-rail {
+  position: sticky;
+  top: calc(var(--topbar-height) + 16px);
+  max-height: calc(100vh - var(--topbar-height) - 32px);
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-margin-top: calc(var(--topbar-height) + 16px);
+  padding-right: 2px;
+}
+
+.net-detail-rail::-webkit-scrollbar {
+  width: 8px;
+}
+
+.net-detail-rail::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.net-detail-rail::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(143, 166, 191, 0.24);
+}
+
+.net-detail-rail::-webkit-scrollbar-thumb:hover {
+  background: rgba(143, 166, 191, 0.36);
+}
+
+.net-overlap {
+  margin-top: 20px;
 }
 
 .net-section-count,
 .net-overlap-count {
-  font-size: 10.5px;
-  color: var(--text-muted);
+  font-size: 11.5px;
+  color: var(--text-secondary);
   border: 1px solid var(--border-soft);
   border-radius: 5px;
   padding: 2px 7px;
@@ -154,8 +194,8 @@
 }
 
 .net-card-name span {
-  font-size: 10px;
-  color: var(--text-muted);
+  font-size: 11.5px;
+  color: var(--text-secondary);
   letter-spacing: 0.05em;
 }
 
@@ -192,8 +232,8 @@
 
 .net-card-cidr span,
 .net-card-gateway span {
-  font-size: 9.5px;
-  color: var(--text-muted);
+  font-size: 11px;
+  color: var(--text-secondary);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -201,7 +241,7 @@
 .net-card-cidr code,
 .net-card-gateway code {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 12.5px;
   color: var(--text-primary);
   word-break: break-all;
 }
@@ -222,13 +262,13 @@
 }
 
 .net-card-stats span {
-  font-size: 9.5px;
-  color: var(--text-muted);
+  font-size: 11px;
+  color: var(--text-secondary);
 }
 
 .net-card-stats strong {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   letter-spacing: -0.02em;
 }
@@ -243,8 +283,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 10px;
-  color: var(--text-muted);
+  font-size: 11.5px;
+  color: var(--text-secondary);
 }
 
 .net-card-select {
@@ -254,7 +294,7 @@
   border: 1px solid var(--border-soft);
   background: rgba(143, 166, 191, 0.05);
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: 12px;
   transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
 }
 
@@ -275,14 +315,24 @@
   outline-offset: 2px;
 }
 
-.net-layout {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
 .net-detail .section-header {
   align-items: flex-start;
+}
+
+.net-detail {
+  min-width: 0;
+}
+
+.net-detail .section-eyebrow,
+.net-overlap .section-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+}
+
+.net-detail .section-subtitle,
+.net-overlap .section-subtitle {
+  font-size: 12.5px;
+  color: var(--text-secondary);
 }
 
 .net-detail-actions {
@@ -304,13 +354,13 @@
 }
 
 .net-host-note strong {
-  font-size: 11.5px;
+  font-size: 12.5px;
   color: var(--amber);
 }
 
 .net-host-note p {
   margin: 0;
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--text-secondary);
   line-height: 1.6;
 }
@@ -330,14 +380,14 @@
 
 .net-pool-head strong {
   display: block;
-  font-size: 12.5px;
+  font-size: 13.5px;
   margin-bottom: 2px;
 }
 
 .net-pool-head p {
   margin: 0;
-  font-size: 10.5px;
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--text-secondary);
 }
 
 .net-pool-legend {
@@ -351,8 +401,8 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 9.5px;
-  color: var(--text-muted);
+  font-size: 11px;
+  color: var(--text-secondary);
   white-space: nowrap;
 }
 
@@ -480,8 +530,8 @@
 }
 
 .net-ring-inner span {
-  font-size: 9.5px;
-  color: var(--text-muted);
+  font-size: 11px;
+  color: var(--text-secondary);
 }
 
 .net-large-copy {
@@ -493,12 +543,12 @@
 }
 
 .net-large-copy > strong {
-  font-size: 12.5px;
+  font-size: 13.5px;
 }
 
 .net-large-copy p {
   margin: 0;
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--text-secondary);
   line-height: 1.6;
 }
@@ -508,8 +558,8 @@
   align-items: center;
   gap: 14px;
   font-family: var(--font-mono);
-  font-size: 10.5px;
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--text-secondary);
 }
 
 .net-used-head {
@@ -522,13 +572,13 @@
 
 .net-used-head h3 {
   margin: 0;
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 600;
 }
 
 .net-used-head span {
-  font-size: 10px;
-  color: var(--text-muted);
+  font-size: 11.5px;
+  color: var(--text-secondary);
 }
 
 .net-table-wrap {
@@ -536,11 +586,15 @@
 }
 
 .net-ip-table {
-  min-width: 620px;
+  min-width: 560px;
+}
+
+.net-ip-table th {
+  font-size: 11px;
 }
 
 .net-ip-table td {
-  font-size: 11.5px;
+  font-size: 12.5px;
 }
 
 .net-alias-cell {
@@ -550,8 +604,8 @@
 
 .net-table-empty {
   text-align: center;
-  color: var(--text-muted);
-  font-size: 11px;
+  color: var(--text-secondary);
+  font-size: 12.5px;
   padding: 20px 12px;
 }
 
@@ -595,7 +649,7 @@
   align-items: center;
   gap: 6px;
   flex-wrap: wrap;
-  font-size: 11.5px;
+  font-size: 12.5px;
 }
 
 .net-overlap-pair svg {
@@ -612,8 +666,24 @@
   padding: 16px;
   border: 1px dashed var(--border-soft);
   border-radius: 9px;
-  color: var(--text-muted);
-  font-size: 11.5px;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+}
+
+@media (max-width: 1099px) {
+  .net-workspace {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .net-detail-rail {
+    order: -1;
+    position: static;
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
 }
 
 @media (max-width: 760px) {
@@ -653,4 +723,63 @@
   .net-overlap-pair {
     gap: 4px;
   }
+}
+
+.net-ip-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.net-ip-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-soft);
+  background: rgba(143, 166, 191, 0.035);
+}
+
+.net-ip-main {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.net-ip-value {
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.net-ip-meta {
+  grid-column: 1 / 2;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+.net-ip-meta em {
+  font-style: normal;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.net-ip-row > .copy-btn {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+}
+
+.net-ip-empty {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  font-size: 12px;
 }

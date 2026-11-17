@@ -66,6 +66,12 @@ func (c *Client) Version(ctx context.Context) (Version, error) {
 	return out, err
 }
 
+func (c *Client) Info(ctx context.Context) (Info, error) {
+	var out Info
+	err := c.get(ctx, "/info", nil, &out)
+	return out, err
+}
+
 func (c *Client) Containers(ctx context.Context) ([]ContainerSummary, error) {
 	var out []ContainerSummary
 	query := url.Values{}

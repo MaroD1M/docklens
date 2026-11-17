@@ -66,52 +66,36 @@ export function NetworkDetail({ network }: NetworkDetailProps) {
         </span>
       </div>
 
-      <div className="table-wrap net-table-wrap">
-        <table className="data-table net-ip-table">
-          <thead>
-            <tr>
-              <th scope="col">IP</th>
-              <th scope="col">类型</th>
-              <th scope="col">容器</th>
-              <th scope="col">别名</th>
-              <th scope="col">操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            {network.usedIps.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="net-table-empty">
-                  暂无已用 IP。
-                </td>
-              </tr>
-            ) : (
-              network.usedIps.map((entry, index) => (
-                <tr key={`${entry.ip}-${entry.kind}-${entry.container ?? "none"}-${index}`}>
-                  <td>
-                    <span className="ip-primary">{entry.ip}</span>
-                  </td>
-                  <td>
-                    <Badge tone={kindTone(entry.kind)}>{ipKindLabels[entry.kind]}</Badge>
-                  </td>
-                  <td>{entry.container ?? "—"}</td>
-                  <td className="net-alias-cell">{entry.aliases?.length ? entry.aliases.join(", ") : "—"}</td>
-                  <td>
-                    <div className="row-actions">
-                      <CopyButton
-                        value={entry.ip}
-                        label="复制"
-                        variant="chip"
-                        iconOnly
-                        title={`复制 IP ${entry.ip}`}
-                        toast={`已复制 ${entry.ip}`}
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+      <div className="net-ip-list">
+        {network.usedIps.length === 0 ? (
+          <p className="net-ip-empty">暂无已用 IP。</p>
+        ) : (
+          network.usedIps.map((entry, index) => (
+            <div
+              className="net-ip-row"
+              key={`${entry.ip}-${entry.kind}-${entry.container ?? "none"}-${index}`}
+            >
+              <div className="net-ip-main">
+                <span className="net-ip-value mono">{entry.ip}</span>
+                <Badge tone={kindTone(entry.kind)}>{ipKindLabels[entry.kind]}</Badge>
+              </div>
+              <div className="net-ip-meta">
+                <span>{entry.container ?? "—"}</span>
+                {entry.aliases?.filter((alias) => alias !== entry.container).length ? (
+                  <em>{entry.aliases.filter((alias) => alias !== entry.container).join(", ")}</em>
+                ) : null}
+              </div>
+              <CopyButton
+                value={entry.ip}
+                label="复制"
+                variant="chip"
+                iconOnly
+                title={`复制 IP ${entry.ip}`}
+                toast={`已复制 ${entry.ip}`}
+              />
+            </div>
+          ))
+        )}
       </div>
     </HoloCard>
   );

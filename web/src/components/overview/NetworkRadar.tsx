@@ -1,5 +1,6 @@
 import type { Endpoint } from "../../types";
 import { HoloCard } from "../ui/HoloCard";
+import { findPortConflicts } from "../../lib/conflicts";
 
 const SIZE = 360;
 const CENTER = SIZE / 2;
@@ -25,7 +26,7 @@ const legendItems = [
   { tone: "lan", label: "局域网" },
   { tone: "container", label: "容器内" },
   { tone: "stale", label: "最后已知" },
-  { tone: "danger", label: "端口冲突" },
+  { tone: "danger", label: "冲突端点" },
 ];
 
 function hashString(value: string): number {
@@ -48,19 +49,7 @@ function dotPoint(endpoint: Endpoint, index: number) {
 }
 
 function conflictIds(endpoints: Endpoint[]): Set<string> {
-  const groups = new Map<string, Endpoint[]>();
-  for (const endpoint of endpoints) {
-    if (endpoint.hidden) continue;
-    const key = `${endpoint.ip}:${endpoint.port}/${endpoint.protocol}`;
-    groups.set(key, [...(groups.get(key) ?? []), endpoint]);
-  }
-  const ids = new Set<string>();
-  for (const group of groups.values()) {
-    if (new Set(group.map((endpoint) => endpoint.service)).size > 1) {
-      group.forEach((endpoint) => ids.add(endpoint.id));
-    }
-  }
-  return ids;
+  return new Set(findPortConflicts(endpoints).flatMap((item) => item.endpoints.map((endpoint) => endpoint.id)));
 }
 
 interface NetworkRadarProps {

@@ -17,6 +17,7 @@ import (
 
 type DockerAPI interface {
 	Version(ctx context.Context) (docker.Version, error)
+	Info(ctx context.Context) (docker.Info, error)
 	Containers(ctx context.Context) ([]docker.ContainerSummary, error)
 	Inspect(ctx context.Context, id string) (docker.ContainerInspect, error)
 	Networks(ctx context.Context) ([]docker.Network, error)
@@ -58,6 +59,7 @@ func (c *Collector) Scan(ctx context.Context) (*model.Snapshot, error) {
 	if err != nil {
 		return nil, fmt.Errorf("docker version: %w", err)
 	}
+	dockerInfo, _ := c.docker.Info(ctx)
 
 	summaries, err := c.docker.Containers(ctx)
 	if err != nil {
@@ -172,6 +174,9 @@ func (c *Collector) Scan(ctx context.Context) (*model.Snapshot, error) {
 	}
 
 	host := c.host.Model("local", version.Version, version.APIVersion)
+	if dockerInfo.Name != "" {
+		host.Name = dockerInfo.Name
+	}
 	return &model.Snapshot{
 		ScannedAt:  now,
 		Host:       host,

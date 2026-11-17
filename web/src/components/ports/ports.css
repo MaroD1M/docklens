@@ -13,6 +13,31 @@
   font-size: 28px;
 }
 
+.ports-summary-card .metric-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.ports-summary-card .metric-value small {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.ports-summary-card .metric-foot {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+
+.ports-matrix-card .section-eyebrow {
+  font-size: 11.5px;
+}
+
+.ports-matrix-card .section-subtitle,
+.ports-conflicts .section-subtitle {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
 .ports-summary-split {
   display: flex;
   align-items: baseline;
@@ -20,7 +45,7 @@
 }
 
 .ports-summary-split span {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-size: 18px;
   font-weight: 400;
 }
@@ -77,14 +102,14 @@
 
 .ports-scale {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-primary);
   letter-spacing: -0.01em;
 }
 
 .ports-scale span {
-  color: var(--text-muted);
-  font-size: 10.5px;
+  color: var(--text-secondary);
+  font-size: 11.5px;
   margin-left: 6px;
 }
 
@@ -99,14 +124,14 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 10px;
-  color: var(--text-muted);
+  font-size: 11.5px;
+  color: var(--text-secondary);
   white-space: nowrap;
 }
 
 .ports-swatch {
-  width: 9px;
-  height: 9px;
+  width: 11px;
+  height: 11px;
   border-radius: 2px;
   border: 1px solid var(--border-soft);
   background: rgba(143, 166, 191, 0.08);
@@ -153,7 +178,7 @@
 .ports-cell {
   appearance: none;
   position: relative;
-  height: 26px;
+  height: 30px;
   min-width: 0;
   display: grid;
   place-items: center;
@@ -161,9 +186,9 @@
   border-radius: 4px;
   border: 1px solid transparent;
   background: rgba(143, 166, 191, 0.045);
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 10.5px;
   font-variant-numeric: tabular-nums;
   line-height: 1;
   cursor: pointer;
@@ -222,7 +247,7 @@
 }
 
 .ports-cell.is-free {
-  color: rgba(143, 166, 191, 0.55);
+  color: var(--text-secondary);
 }
 
 .ports-cell.is-selected {
@@ -247,8 +272,8 @@
   border-style: dashed;
   border-color: var(--border-soft);
   background: rgba(143, 166, 191, 0.03);
-  color: var(--text-muted);
-  font-size: 11.5px;
+  color: var(--text-secondary);
+  font-size: 12.5px;
   text-align: center;
 }
 
@@ -267,15 +292,15 @@
 }
 
 .ports-info-port span {
-  font-size: 11px;
-  color: var(--text-muted);
+  font-size: 12.5px;
+  color: var(--text-secondary);
   font-weight: 400;
   margin-left: 2px;
 }
 
 .ports-info-service {
   margin-top: 3px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-secondary);
   word-break: break-word;
 }
@@ -285,8 +310,8 @@
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
-  font-size: 10.5px;
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--text-secondary);
 }
 
 .ports-info-actions {
@@ -305,8 +330,8 @@
 }
 
 .ports-gaps-count {
-  font-size: 10.5px;
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--text-secondary);
   border: 1px solid var(--border-soft);
   border-radius: 5px;
   padding: 2px 7px;
@@ -344,13 +369,13 @@
 }
 
 .ports-gap-range {
-  font-size: 12.5px;
+  font-size: 13.5px;
   color: var(--text-primary);
 }
 
 .ports-gap-size {
-  font-size: 10px;
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--text-secondary);
 }
 
 .ports-gaps-empty {
@@ -358,8 +383,8 @@
   padding: 14px;
   border: 1px dashed var(--border-soft);
   border-radius: 9px;
-  color: var(--text-muted);
-  font-size: 11.5px;
+  color: var(--text-secondary);
+  font-size: 12.5px;
 }
 
 .ports-panel {
@@ -396,8 +421,8 @@
 
 .ports-field > span,
 .ports-field-label {
-  font-size: 10px;
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--text-secondary);
   letter-spacing: 0.02em;
 }
 
@@ -424,13 +449,13 @@
 
 .ports-error {
   margin: 0;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--coral);
 }
 
 .ports-notice {
   margin: 0;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--amber);
 }
 
@@ -446,7 +471,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--text-secondary);
   margin-bottom: 8px;
 }
@@ -454,8 +479,8 @@
 .ports-finder-results-head em {
   font-style: normal;
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  color: var(--text-muted);
+  font-size: 11.5px;
+  color: var(--text-secondary);
   margin-left: 6px;
 }
 
@@ -469,13 +494,13 @@
 .ports-port-chip {
   min-width: 40px;
   justify-content: center;
-  font-size: 10px;
+  font-size: 11.5px;
 }
 
 .ports-finder-empty {
   margin: 0;
-  font-size: 11px;
-  color: var(--text-muted);
+  font-size: 12.5px;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -514,8 +539,8 @@
 .ports-check-empty,
 .ports-check-scanning {
   margin: 0;
-  font-size: 11px;
-  color: var(--text-muted);
+  font-size: 12.5px;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -549,20 +574,20 @@
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-  font-size: 12.5px;
+  font-size: 13.5px;
 }
 
 .ports-result-proto {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  color: var(--text-muted);
+  font-size: 11.5px;
+  color: var(--text-secondary);
   border: 1px solid var(--border-soft);
   border-radius: 4px;
-  padding: 0 4px;
+  padding: 0 5px;
 }
 
 .ports-result-service {
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 600;
   word-break: break-word;
 }
@@ -571,9 +596,9 @@
   font-style: normal;
   display: block;
   margin-top: 2px;
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 400;
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
 .ports-result-meta {
@@ -581,8 +606,8 @@
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-  font-size: 10.5px;
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--text-secondary);
 }
 
 .ports-result-actions {
@@ -594,9 +619,208 @@
 
 .ports-result-free-text {
   margin: 0;
-  font-size: 11.5px;
+  font-size: 12.5px;
   color: var(--text-secondary);
   line-height: 1.6;
+}
+
+/* ---------- Range toolbar ---------- */
+
+.ports-range-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  background: rgba(143, 166, 191, 0.04);
+}
+
+.ports-window-nav {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ports-window-nav .btn {
+  font-size: 12px;
+}
+
+.ports-window-jump {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.ports-window-jump label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.ports-window-jump .input {
+  width: 112px;
+}
+
+.ports-window-readout {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.ports-window-readout .mono {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.ports-window-readout strong {
+  color: var(--coral);
+  font-weight: 600;
+}
+
+.ports-presets {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.ports-presets .segmented {
+  flex-wrap: wrap;
+}
+
+.ports-presets .segmented button {
+  font-size: 11.5px;
+}
+
+.ports-range-hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ---------- Conflict panel ---------- */
+
+.ports-conflicts-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.ports-conflict-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 286px;
+  overflow-y: auto;
+}
+
+.ports-conflict-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 92, 122, 0.24);
+  background: linear-gradient(110deg, rgba(255, 92, 122, 0.07), transparent 72%);
+}
+
+.ports-conflict-main {
+  min-width: 0;
+}
+
+.ports-conflict-port {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--coral);
+  line-height: 1.2;
+}
+
+.ports-conflict-port span {
+  margin-left: 2px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.ports-conflict-services {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+.ports-conflict-endpoints {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.ports-conflict-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ports-conflict-actions .btn {
+  font-size: 12px;
+}
+
+.ports-conflicts-empty {
+  margin: 0;
+  padding: 14px;
+  border: 1px dashed var(--border-soft);
+  border-radius: 9px;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+}
+
+[data-theme="light"] .ports-cell.is-used {
+  border-color: rgba(8, 127, 158, 0.35);
+  background: rgba(8, 127, 158, 0.12);
+  color: #066f86;
+}
+
+[data-theme="light"] .ports-cell.is-conflict {
+  border-color: rgba(214, 47, 82, 0.45);
+  background: rgba(214, 47, 82, 0.14);
+  color: #a91233;
+  box-shadow: inset 0 0 10px rgba(214, 47, 82, 0.1);
+}
+
+[data-theme="light"] .ports-cell.is-hidden {
+  border-color: rgba(31, 65, 90, 0.28);
+  background: rgba(31, 65, 90, 0.06);
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .ports-cell.is-inferred {
+  border-color: rgba(184, 107, 0, 0.38);
+  background: rgba(184, 107, 0, 0.12);
+  color: #8a4f00;
+}
+
+[data-theme="light"] .ports-cell.is-reserved {
+  border-color: rgba(109, 75, 216, 0.38);
+  background: rgba(109, 75, 216, 0.12);
+  color: #4c2fbd;
 }
 
 @media (max-width: 1200px) {
@@ -627,8 +851,8 @@
   }
 
   .ports-cell {
-    height: 23px;
-    font-size: 8px;
+    height: 28px;
+    font-size: 10px;
   }
 
   .ports-controls {
@@ -653,6 +877,16 @@
     gap: 8px;
   }
 
+  .ports-conflict-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ports-conflict-actions {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
   .ports-cell span {
     display: none;
   }
@@ -663,6 +897,6 @@
   .ports-cell.is-inferred span,
   .ports-cell.is-reserved span {
     display: block;
-    font-size: 7px;
+    font-size: 9px;
   }
 }

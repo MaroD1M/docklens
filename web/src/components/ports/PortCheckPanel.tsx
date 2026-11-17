@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { Endpoint } from "../../types";
+import { useHostInfo } from "../../data/DataProvider";
 import { primaryIp, sourceLabels, statusLabels } from "../../lib/format";
 import { Badge } from "../ui/Badge";
 import { CopyButton } from "../ui/CopyButton";
@@ -35,6 +36,7 @@ function endpointIps(endpoint: Endpoint): string[] {
 }
 
 export function PortCheckPanel({ endpoints }: PortCheckPanelProps) {
+  const host = useHostInfo();
   const [ip, setIp] = useState("");
   const [port, setPort] = useState("8080");
   const [protocol, setProtocol] = useState<PortProtocol>("tcp");
@@ -42,6 +44,16 @@ export function PortCheckPanel({ endpoints }: PortCheckPanelProps) {
   const [error, setError] = useState("");
   const [result, setResult] = useState<CheckResult | null>(null);
   const timer = useRef<number | undefined>(undefined);
+  const previousDefaultIp = useRef(host.ip);
+
+  useEffect(() => {
+    const hostIp = host.ip;
+    if (!hostIp) return;
+    setIp((current) =>
+      current === "" || current === previousDefaultIp.current ? hostIp : current,
+    );
+    previousDefaultIp.current = hostIp;
+  }, [host.ip]);
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
@@ -106,7 +118,7 @@ export function PortCheckPanel({ endpoints }: PortCheckPanelProps) {
                 className="input mono"
                 type="text"
                 value={ip}
-                placeholder="192.168.1.20"
+                placeholder={host.ip || "192.168.1.20"}
                 onChange={(event) => setIp(event.target.value)}
                 aria-label="要检查的 IP 地址"
               />

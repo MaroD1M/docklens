@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Download } from "lucide-react";
 import { networks } from "../data/mock";
 import { useToast } from "../components/ui/Toast";
@@ -12,11 +12,24 @@ import { SubnetOverlap } from "../components/networks/SubnetOverlap";
 import { uniqueSubnets } from "../components/networks/networkUtils";
 import "../components/networks/networks.css";
 
+const STACKED_LAYOUT = "(max-width: 1099px)";
+
 export function NetworksPage() {
   const { push } = useToast();
+  const detailRailRef = useRef<HTMLElement>(null);
   const [selectedId, setSelectedId] = useState(networks[0]?.id ?? "");
   const selected = networks.find((network) => network.id === selectedId) ?? networks[0];
   const allCidrs = uniqueSubnets(networks);
+
+  const selectNetwork = (id: string) => {
+    setSelectedId(id);
+    const rail = detailRailRef.current;
+    if (!rail) return;
+    rail.scrollTop = 0;
+    if (window.matchMedia(STACKED_LAYOUT).matches) {
+      requestAnimationFrame(() => rail.scrollIntoView({ behavior: "smooth", block: "start" }));
+    }
+  };
 
   const exportNetworks = () => {
     const date = new Date().toISOString().slice(0, 10);
@@ -75,27 +88,30 @@ export function NetworksPage() {
 
       <NetworkWarning networks={networks} />
 
-      <section className="net-section" aria-label="网络列表">
-        <SectionHeader
-          title="Docker 网络"
-          action={<span className="net-section-count">{networks.length} 个网络</span>}
-        />
-        <div className="net-card-grid">
-          {networks.map((network) => (
-            <NetworkCard
-              key={network.id}
-              network={network}
-              selected={network.id === selected.id}
-              onSelect={() => setSelectedId(network.id)}
-            />
-          ))}
-        </div>
-      </section>
+      <div className="net-workspace">
+        <section className="net-list-pane" aria-label="网络列表">
+          <SectionHeader
+            title="Docker 网络"
+            action={<span className="net-section-count">{networks.length} 个网络</span>}
+          />
+          <div className="net-card-grid">
+            {networks.map((network) => (
+              <NetworkCard
+                key={network.id}
+                network={network}
+                selected={network.id === selected.id}
+                onSelect={() => selectNetwork(network.id)}
+              />
+            ))}
+          </div>
+        </section>
 
-      <div className="net-layout">
-        <NetworkDetail network={selected} />
-        <SubnetOverlap networks={networks} />
+        <aside className="net-detail-rail" aria-label="网络详情" ref={detailRailRef}>
+          <NetworkDetail network={selected} />
+        </aside>
       </div>
+
+      <SubnetOverlap networks={networks} />
     </div>
   );
 }

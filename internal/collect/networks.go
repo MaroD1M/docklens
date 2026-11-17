@@ -252,54 +252,113 @@ func subnetWarnings(networks []model.Network) []model.Warning {
 }
 
 func portConflicts(endpoints []model.Endpoint) []model.Warning {
-	type conflictGroup struct {
-		ip        string
-		port      int
-		protocol  model.Protocol
-		services  map[string]bool
-		endpoints []model.Endpoint
-	}
-	groups := make(map[string]*conflictGroup)
+	groups := make(map[string][]model.Endpoint)
 	for _, endpoint := range endpoints {
 		if endpoint.Status != model.StatusRunning {
 			continue
 		}
-		if endpoint.Scope != model.ScopeHost && endpoint.Scope != model.ScopeLAN && endpoint.Scope != model.ScopeHostNet {
+		if endpoint.Scope != model.ScopeHost && endpoint.Scope != model.ScopeLAN && endpoint.Scope != model.ScopeHostNet && endpoint.Scope != model.ScopeLoopback {
 			continue
 		}
-		ip := endpoint.IP
-		if netutil.IsWildcardIP(ip) {
-			ip = "wildcard"
-		}
-		key := ip + "|" + fmt.Sprint(endpoint.Port) + "|" + string(endpoint.Protocol)
-		group, ok := groups[key]
-		if !ok {
-			group = &conflictGroup{ip: ip, port: endpoint.Port, protocol: endpoint.Protocol, services: make(map[string]bool)}
-			groups[key] = group
-		}
-		group.services[endpoint.Service] = true
-		group.endpoints = append(group.endpoints, endpoint)
+		key := fmt.Sprintf("%d/%s", endpoint.Port, endpoint.Protocol)
+		groups[key] = append(groups[key], endpoint)
 	}
+
 	warnings := make([]model.Warning, 0)
 	for _, group := range groups {
-		if len(group.services) < 2 {
+		if len(group) < 2 {
 			continue
 		}
-		names := make([]string, 0, len(group.services))
-		for name := range group.services {
+		involved := make(map[int]bool)
+		for i := 0; i < len(group); i++ {
+			for j := i + 1; j < len(group); j++ {
+				if endpointOwnerKey(group[i]) == endpointOwnerKey(group[j]) {
+					continue
+				}
+				if !bindingsOverlap(group[i], group[j]) {
+					continue
+				}
+				involved[i] = true
+				involved[j] = true
+			}
+		}
+		if len(involved) < 2 {
+			continue
+		}
+		services := make(map[string]bool)
+		for index := range involved {
+			services[group[index].Service] = true
+		}
+		if len(services) < 2 {
+			continue
+		}
+		names := make([]string, 0, len(services))
+		for name := range services {
 			names = append(names, name)
 		}
 		sort.Strings(names)
+		first := group[0]
 		warnings = append(warnings, model.Warning{
 			Type:     "PORT_CONFLICT",
 			Severity: "danger",
 			Title:    "端口冲突",
-			Message:  fmt.Sprintf("%d/%s 同时被 %s 使用", group.port, group.protocol, strings.Join(names, " 与 ")),
-			Detail:   "绑定地址 " + group.ip,
+			Message:  fmt.Sprintf("%d/%s 同时被 %s 使用", first.Port, first.Protocol, strings.Join(names, " 与 ")),
+			Detail:   "同一宿主机网络地址上存在多个监听",
 		})
 	}
 	sort.Slice(warnings, func(i, j int) bool { return warnings[i].Message < warnings[j].Message })
 	return warnings
+}
+
+func endpointOwnerKey(endpoint model.Endpoint) string {
+	if endpoint.Container != "" && endpoint.Container != "—" {
+		return endpoint.Container
+	}
+	return endpoint.Service
+}
+
+func endpointBindings(endpoint model.Endpoint) (bool, map[string]bool) {
+	ips := make(map[string]bool)
+	wildcard := netutil.IsWildcardIP(endpoint.IP)
+	if !wildcard && endpoint.IP != "" {
+		ips[endpoint.IP] = true
+	}
+	for _, item := range endpoint.AccessIPs {
+		if item.IP != "" && !netutil.IsWildcardIP(item.IP) {
+			ips[item.IP] = true
+		}
+	}
+	return wildcard, ips
+}
+
+func bindingsOverlap(a, b model.Endpoint) bool {
+	leftWildcard, leftIPs := endpointBindings(a)
+	rightWildcard, rightIPs := endpointBindings(b)
+	if leftWildcard && rightWildcard {
+		return true
+	}
+	if leftWildcard {
+		for ip := range rightIPs {
+			if leftIPs[ip] || net.ParseIP(ip).IsLoopback() {
+				return true
+			}
+		}
+		return false
+	}
+	if rightWildcard {
+		for ip := range leftIPs {
+			if rightIPs[ip] || net.ParseIP(ip).IsLoopback() {
+				return true
+			}
+		}
+		return false
+	}
+	for ip := range leftIPs {
+		if rightIPs[ip] {
+			return true
+		}
+	}
+	return false
 }
 
 func dedupeUsage(values []model.IPUsage) []model.IPUsage {

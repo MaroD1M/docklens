@@ -21,6 +21,10 @@ func (f *fakeDocker) Version(context.Context) (docker.Version, error) {
 	return f.version, nil
 }
 
+func (f *fakeDocker) Info(context.Context) (docker.Info, error) {
+	return docker.Info{Name: "DS920+"}, nil
+}
+
 func (f *fakeDocker) Containers(context.Context) ([]docker.ContainerSummary, error) {
 	return f.containers, nil
 }
@@ -104,6 +108,9 @@ func TestScanBuildsEndpoints(t *testing.T) {
 	}
 	if len(snapshot.Containers) != 3 {
 		t.Fatalf("expected 3 containers, got %d", len(snapshot.Containers))
+	}
+	if snapshot.Host.Name != "DS920+" {
+		t.Fatalf("expected docker host name, got %q", snapshot.Host.Name)
 	}
 
 	var published, internal, hostNet *model.Endpoint

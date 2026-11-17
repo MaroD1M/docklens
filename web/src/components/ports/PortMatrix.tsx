@@ -18,6 +18,7 @@ interface PortMatrixProps {
   protocol: PortProtocol;
   start: number;
   end: number;
+  focusPort?: number | null;
 }
 
 const stateTone: Record<PortState, "cyan" | "red" | "muted" | "amber" | "green" | "violet"> = {
@@ -31,7 +32,15 @@ const stateTone: Record<PortState, "cyan" | "red" | "muted" | "amber" | "green" 
 
 const legendStates: PortState[] = ["used", "conflict", "hidden", "inferred", "reserved", "free"];
 
-export function PortMatrix({ endpoints, portCells, udpPorts, protocol, start, end }: PortMatrixProps) {
+export function PortMatrix({
+  endpoints,
+  portCells,
+  udpPorts,
+  protocol,
+  start,
+  end,
+  focusPort,
+}: PortMatrixProps) {
   const navigate = useNavigate();
   const [hovered, setHovered] = useState<PortSlot | null>(null);
   const [selected, setSelected] = useState<PortSlot | null>(null);
@@ -40,11 +49,13 @@ export function PortMatrix({ endpoints, portCells, udpPorts, protocol, start, en
     () => buildPortSlots(protocol, start, end, endpoints, portCells, udpPorts),
     [protocol, start, end, endpoints, portCells, udpPorts],
   );
+  const conflictCount = slots.filter((slot) => slot.state === "conflict").length;
 
   useEffect(() => {
     setHovered(null);
-    setSelected(slots.find((slot) => slot.state !== "free") ?? null);
-  }, [slots]);
+    const focused = focusPort != null ? slots.find((slot) => slot.port === focusPort) : null;
+    setSelected(focused ?? slots.find((slot) => slot.state !== "free") ?? null);
+  }, [slots, focusPort]);
 
   const active = hovered ?? selected;
 
@@ -60,7 +71,10 @@ export function PortMatrix({ endpoints, portCells, udpPorts, protocol, start, en
       <div className="ports-matrix-top">
         <div className="ports-scale">
           {start}–{end}
-          <span>· 16 列 · {slots.length} 端口</span>
+          <span>
+            · 共 {slots.length} 个端口 · 16 列
+            {conflictCount > 0 ? ` · ${conflictCount} 处冲突` : ""}
+          </span>
         </div>
         <div className="ports-legend" aria-label="端口状态图例">
           {legendStates.map((state) => (

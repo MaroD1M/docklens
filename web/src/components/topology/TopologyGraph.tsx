@@ -161,22 +161,24 @@ export function TopologyGraph({
     const config =
       layout === "compact"
         ? {
-            top: 42,
-            bottom: 34,
-            rowGap: 34,
-            padding: 15,
-            groupGap: 20,
+            top: 48,
+            bottom: 40,
+            rowGap: 58,
+            padding: 26,
+            minGroupHeight: 82,
+            groupGap: 24,
             hostX: 88,
             networkX: 306,
             containerX: 588,
             endpointX: 928,
           }
         : {
-            top: 54,
-            bottom: 42,
-            rowGap: 40,
-            padding: 22,
-            groupGap: 28,
+            top: 60,
+            bottom: 48,
+            rowGap: 68,
+            padding: 30,
+            minGroupHeight: 90,
+            groupGap: 34,
             hostX: 90,
             networkX: 324,
             containerX: 636,
@@ -195,7 +197,10 @@ export function TopologyGraph({
 
     groups.forEach((group) => {
       const slots = Math.max(group.containers.length, group.endpointItems.length, 1);
-      const height = Math.max((slots - 1) * config.rowGap + config.padding * 2, 74);
+      const height = Math.max(
+        (slots - 1) * config.rowGap + config.padding * 2,
+        config.minGroupHeight,
+      );
       const top = cursor;
       const innerTop = top + config.padding;
       const innerHeight = height - config.padding * 2;
@@ -213,26 +218,15 @@ export function TopologyGraph({
       nodeById.set(networkNode.id, networkNode);
       networkNodes.push(networkNode);
 
-      const endpointSpan = Math.max((group.endpointItems.length - 1) * config.rowGap, 0);
-      const endpointOffset = Math.max((innerHeight - endpointSpan) / 2, 0);
+      const usedHeight = (slots - 1) * config.rowGap;
+      const rowStart = innerTop + Math.max((innerHeight - usedHeight) / 2, 0);
+
+      const containerYs = group.containers.map(
+        (_, index) => rowStart + index * config.rowGap,
+      );
       const endpointYs = group.endpointItems.map(
-        (_, index) => innerTop + endpointOffset + index * config.rowGap,
+        (_, index) => rowStart + index * config.rowGap,
       );
-      const endpointIndexById = new Map(
-        group.endpointItems.map((endpoint, index) => [endpoint.id, index]),
-      );
-
-      const containerYs = group.containers.map((item, index) => {
-        const indexes = item.endpoints
-          .map((endpoint) => endpointIndexById.get(endpoint.id))
-          .filter((value): value is number => value !== undefined);
-        if (indexes.length > 0) {
-          return indexes.reduce((sum, value) => sum + endpointYs[value], 0) / indexes.length;
-        }
-        const divisor = Math.max(group.containers.length, 1);
-        return innerTop + ((index + 0.5) / divisor) * Math.max(innerHeight, 0);
-      });
-
       const endpointOwner = new Map<string, string>();
 
       group.containers.forEach((item, index) => {
